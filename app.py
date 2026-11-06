@@ -201,6 +201,32 @@ st.markdown(f"""
         color: {text_color} !important;
     }}
 
+    /* Top-right button bar (the row that contains the marker is pinned to the corner) */
+    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{
+        position: fixed !important;
+        top: 20px;
+        right: 28px;
+        width: 270px !important;
+        max-width: calc(100vw - 200px);
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+        z-index: 99999;
+    }}
+    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) > div {{
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        width: auto !important;
+    }}
+    div[data-testid="stElementContainer"]:has(.topbar-marker),
+    div.element-container:has(.topbar-marker) {{
+        display: none !important;
+    }}
+
+    /* Let the aurora show behind the chat input bar */
+    [data-testid="stBottom"], [data-testid="stBottom"] > div {{
+        background: transparent !important;
+    }}
+
     /* Disclaimer & AI Notice */
     .disclaimer-footer {{
         position: fixed;
@@ -242,11 +268,15 @@ def show_developer():
     st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap');
-div[data-testid="stDialog"] div[role="dialog"] {{
+div[role="dialog"] {{
     background: {bg_color} !important;
     border-radius: 24px !important;
 }}
-div[data-testid="stDialog"] div[role="dialog"] h2 {{
+div[role="dialog"] button[aria-label="Close"],
+div[role="dialog"] button[aria-label="Close"] svg {{
+    color: {text_color} !important;
+}}
+div[role="dialog"] h2 {{
     font-family: 'Patrick Hand SC', cursive !important;
     font-size: 1.5rem !important;
     letter-spacing: 0.06em;
@@ -264,8 +294,13 @@ div[data-testid="stDialog"] div[role="dialog"] h2 {{
 }}
 .dev-card {{
     font-family: 'Patrick Hand SC', cursive;
-    color: {text_color};
+    color: {text_color} !important;
+    background: {bg_color};
+    border-radius: 18px;
     padding: 0.5rem 0.4rem 0.2rem 0.4rem;
+}}
+.dev-card div, .dev-card span, .dev-card a {{
+    color: {text_color};
 }}
 .dev-name {{
     font-size: 1.6rem;
@@ -333,10 +368,11 @@ div[data-testid="stDialog"] div[role="dialog"] h2 {{
 """, unsafe_allow_html=True)
 
 
-# 6. Top-Right Buttons (Dark Mode Toggle & Developer Info)
-_, btn_col1, btn_col2 = st.columns([3.8, 1.1, 1.1])
+# 6. Top-Right Buttons (Dark Mode Toggle & Developer Info), pinned to the top-right corner
+btn_col1, btn_col2 = st.columns(2)
 
 with btn_col1:
+    st.markdown('<div class="topbar-marker"></div>', unsafe_allow_html=True)
     toggle_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
     if st.button(toggle_label, use_container_width=True, key="theme_toggle"):
         st.session_state.dark_mode = not st.session_state.dark_mode
