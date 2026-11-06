@@ -33,7 +33,7 @@ else:
     footer_bg = "rgba(246, 247, 251, 0.85)"
     brand_border = "#131b2e"
 
-# 3. Dynamic Custom CSS & Absolute Corner Positioning
+# 3. Dynamic Custom CSS & Fixed Top Navigation Bar
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
@@ -89,21 +89,21 @@ st.markdown(f"""
         max-width: 760px !important;
     }}
 
-    /* Fixed Header Anchored to Top Corners */
+    /* Fixed Header Anchored to Both Top Corners */
     .fixed-top-nav {{
         position: fixed;
         top: 20px;
-        left: 24px;
-        right: 24px;
+        left: 28px;
+        right: 28px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         z-index: 99999;
-        pointer-events: none; /* Allows clicking through empty space */
+        pointer-events: none;
     }}
 
     .pointer-events-auto {{
-        pointer-events: auto; /* Re-enables clicking on logo and button */
+        pointer-events: auto;
     }}
 
     .logo-badge {{
@@ -158,175 +158,4 @@ st.markdown(f"""
     [data-testid="stChatInput"] {{
         background: {input_bg} !important;
         border-radius: 22px !important;
-        border: 1px solid {card_border} !important;
-        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08) !important;
-        padding: 10px 14px 42px 14px !important;
-        position: relative !important;
-    }}
-    [data-testid="stChatInput"] textarea {{
-        color: {text_color} !important;
-        font-size: 1rem !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-    }}
-    [data-testid="stChatInput"]::after {{
-        content: "💡";
-        position: absolute;
-        bottom: 12px;
-        left: 18px;
-        font-size: 0.95rem;
-        pointer-events: none;
-    }}
-    [data-testid="stChatInputSubmitButton"] {{
-        background-color: {text_color} !important;
-        color: {bg_color} !important;
-        border-radius: 50% !important;
-        width: 34px !important;
-        height: 34px !important;
-        position: absolute !important;
-        bottom: 10px !important;
-        right: 14px !important;
-    }}
-
-    /* Chat Messages */
-    [data-testid="stChatMessage"] {{
-        background: {card_bg} !important;
-        backdrop-filter: blur(12px) !important;
-        border: 1px solid {card_border} !important;
-        border-radius: 18px !important;
-        padding: 14px 18px !important;
-        margin-bottom: 12px !important;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
-        color: {text_color} !important;
-        animation: fadeUp 0.35s ease-out both;
-    }}
-    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li, [data-testid="stChatMessage"] span {{
-        color: {text_color} !important;
-    }}
-
-    /* Disclaimer & AI Notice */
-    .disclaimer-footer {{
-        position: fixed;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 0.73rem;
-        color: #94a3b8;
-        z-index: 10;
-        pointer-events: none;
-        background: {footer_bg};
-        padding: 4px;
-    }}
-</style>
-
-<div class="aurora-bg"></div>
-<div class="disclaimer-footer">
-    ⚡ AI Notice: Content is AI-generated and can contain mistakes. Not professional business/legal advice. Human verification required.
-</div>
-""", unsafe_allow_html=True)
-
-# 4. Fixed Top Corners Header (Logo on Top-Left, Toggle on Top-Right)
-st.markdown("""
-<div class="fixed-top-nav">
-    <div class="pointer-events-auto">
-        <div class="logo-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            StartupMateAI
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# Top Right Toggle Button Container
-_, col_btn = st.columns([6, 1])
-with col_btn:
-    toggle_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
-    if st.button(toggle_label, use_container_width=True):
-        st.session_state.dark_mode = not st.session_state.dark_mode
-        st.rerun()
-
-# 5. Groq Connection & System Prompt (Topic 84: Startup Co-Founder)
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-
-SYSTEM_PROMPT = (
-    "You are StartupMateAI, an expert startup co-founder, business strategist, and venture mentor. "
-    "Your objective is to help founders brainstorm ideas, test market viability, construct SWOT analyses, "
-    "and build structured execution roadmaps. "
-    "SAFETY & DISCLAIMER RULES:\n"
-    "1. Always remind users that financial, legal, and tax projections are simulated and require professional verification.\n"
-    "2. If a user mentions self-harm, danger, illegal activity, or severe distress, immediately stop business advice, express care, and instruct them to contact emergency services or trusted authorities.\n"
-    "3. Be objective, constructive, and realistic in startup critique."
-)
-
-@st.cache_data(ttl=3600)
-def get_model():
-    return "llama-3.1-8b-instant"
-
-selected_model = get_model()
-
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-
-user_prompt = None
-
-# 6. Landing View
-if len(st.session_state.messages) == 1:
-    with st.container():
-        st.markdown('<div class="hero-heading">Let\'s create a startup.</div>', unsafe_allow_html=True)
-
-        inline_input = st.chat_input("Pitch your startup idea or ask a question...")
-        if inline_input:
-            user_prompt = inline_input
-
-        st.write("")
-        c1, c2, c3, c4 = st.columns(4)
-        if c1.button("💡 Brainstorm Idea", use_container_width=True):
-            user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
-        if c2.button("🔍 Validate with SWOT", use_container_width=True):
-            user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
-        if c3.button("🗺️ 30-Day Roadmap", use_container_width=True):
-            user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
-        if c4.button("📊 Pitch Deck Outline", use_container_width=True):
-            user_prompt = "Give me a 10-slide seed pitch deck structure for investors."
-
-# 7. Active Chat View
-else:
-    top_c1, top_c2 = st.columns([5, 1])
-    with top_c2:
-        if st.button("↺ New Pitch", use_container_width=True):
-            st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-            st.rerun()
-
-    for msg in st.session_state.messages:
-        if msg["role"] != "system":
-            avatar = "🧑‍💻" if msg["role"] == "user" else "🚀"
-            with st.chat_message(msg["role"], avatar=avatar):
-                st.markdown(msg["content"])
-
-    docked_input = st.chat_input("Ask your co-founder anything...")
-    if docked_input:
-        user_prompt = docked_input
-
-# 8. Response Generation
-if user_prompt:
-    st.session_state.messages.append({"role": "user", "content": user_prompt})
-
-    if len(st.session_state.messages) == 2:
-        with st.chat_message("user", avatar="🧑‍💻"):
-            st.markdown(user_prompt)
-
-    with st.chat_message("assistant", avatar="🚀"):
-        try:
-            stream = client.chat.completions.create(
-                model=selected_model,
-                messages=st.session_state.messages,
-                stream=True,
-            )
-            reply = st.write_stream(
-                chunk.choices[0].delta.content or "" for chunk in stream
-            )
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            if len(st.session_state.messages) == 3:
-                st.rerun()
-        except Exception as e:
-            st.error(f"API Error: {e}")
+        border:
