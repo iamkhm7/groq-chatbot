@@ -384,7 +384,7 @@ with btn_col2:
 
 # 7. Groq Connection & System Prompt
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-MODEL = "llama-3.1-8b-instant"
+MODEL = "openai/gpt-oss-20b"  # replaces llama-3.1-8b-instant (shut down by Groq on 2026-08-16)
 
 SYSTEM_PROMPT = (
     "You are StartupMateAI, an expert startup co-founder, business strategist, and venture mentor. "
