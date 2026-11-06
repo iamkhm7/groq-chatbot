@@ -33,7 +33,7 @@ else:
     footer_bg = "rgba(246, 247, 251, 0.85)"
     brand_border = "#131b2e"
 
-# 3. Dynamic Custom CSS
+# 3. Dynamic Custom CSS & Absolute Corner Positioning
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
@@ -89,30 +89,30 @@ st.markdown(f"""
         max-width: 760px !important;
     }}
 
-    /* Top Navigation Bar */
-    .top-nav {{
+    /* Fixed Header Anchored to Top Corners */
+    .fixed-top-nav {{
         position: fixed;
-        top: 22px;
-        left: 32px;
-        right: 32px;
+        top: 20px;
+        left: 24px;
+        right: 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 100;
-        animation: fadeUp 0.5s ease-out;
+        z-index: 99999;
+        pointer-events: none; /* Allows clicking through empty space */
     }}
-    .brand-wrap {{
-        display: flex;
-        align-items: center;
-        gap: 10px;
+
+    .pointer-events-auto {{
+        pointer-events: auto; /* Re-enables clicking on logo and button */
     }}
+
     .logo-badge {{
         display: flex;
         align-items: center;
         gap: 8px;
         border: 1.5px solid {brand_border};
         border-radius: 999px;
-        padding: 5px 16px;
+        padding: 6px 16px;
         font-size: 0.95rem;
         font-weight: 600;
         color: {text_color};
@@ -121,20 +121,17 @@ st.markdown(f"""
         transition: all 0.3s ease;
     }}
 
-    /* Style Streamlit button in top right */
-    [data-testid="stHorizontalBlock"] {{
-        align-items: center;
-    }}
+    /* Toggle Button Styling */
     div.stButton > button {{
         background: {pill_bg} !important;
         backdrop-filter: blur(10px) !important;
         color: {text_color} !important;
         border: 1px solid {card_border} !important;
         border-radius: 999px !important;
-        padding: 0.42rem 0.95rem !important;
-        font-size: 0.82rem !important;
+        padding: 0.4rem 1rem !important;
+        font-size: 0.85rem !important;
         font-weight: 500 !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
         transition: all 0.22s ease !important;
         white-space: nowrap !important;
     }}
@@ -228,19 +225,21 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# 4. Top Header Layout (Logo on left, Toggle Button neatly in the top right)
-top_col1, top_col2 = st.columns([4, 1])
-with top_col1:
-    st.markdown("""
-    <div style="display: flex; align-items: center; gap: 10px; padding-top: 4px;">
+# 4. Fixed Top Corners Header (Logo on Top-Left, Toggle on Top-Right)
+st.markdown("""
+<div class="fixed-top-nav">
+    <div class="pointer-events-auto">
         <div class="logo-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             StartupMateAI
         </div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-with top_col2:
+# Top Right Toggle Button Container
+_, col_btn = st.columns([6, 1])
+with col_btn:
     toggle_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
     if st.button(toggle_label, use_container_width=True):
         st.session_state.dark_mode = not st.session_state.dark_mode
