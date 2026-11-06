@@ -13,7 +13,6 @@ st.set_page_config(
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# Colors based on toggle state
 if st.session_state.dark_mode:
     bg_color = "#0f172a"
     text_color = "#f8fafc"
@@ -133,7 +132,6 @@ st.markdown(f"""
         font-weight: 500 !important;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
         transition: all 0.22s ease !important;
-        white-space: nowrap !important;
     }}
     div.stButton > button:hover {{
         transform: translateY(-2px) !important;
@@ -225,7 +223,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# 4. Render Logo on Top-Left
+# 4. Logo on Top-Left
 st.markdown("""
 <div class="fixed-top-nav">
     <div class="pointer-events-auto">
@@ -237,7 +235,21 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 5. Top-Right Buttons (Dark Mode Toggle & Developer Info Button)
+
+# 5. Developer Details Dialog (requires streamlit>=1.37)
+@st.dialog("👨‍💻 Developer Details")
+def show_developer():
+    st.markdown("**Name:** Kamrul Hasan Maruf  \n*(MARUF MD KAMRUL HASAN)*")
+    st.markdown("**Department:** Artificial Intelligence")
+    st.markdown("**Institution:** Kyungdong University Global")
+    st.markdown("---")
+    st.markdown("### 🌐 Connect Links")
+    st.markdown("- [GitHub Profile](https://github.com/iamkhm7)")
+    st.markdown("- [Instagram Profile](https://instagram.com/_iamkhm_)")
+    st.markdown("- [Facebook Profile](https://facebook.com/iamkhm)")
+
+
+# 6. Top-Right Buttons (Dark Mode Toggle & Developer Info)
 _, btn_col1, btn_col2 = st.columns([3.8, 1.1, 1.1])
 
 with btn_col1:
@@ -248,29 +260,11 @@ with btn_col1:
 
 with btn_col2:
     if st.button("👨‍💻 Developer", use_container_width=True, key="dev_btn"):
-        st.session_state.show_dev_modal = True
+        show_developer()
 
-# 6. Developer Details Slide-Out Sidebar
-if st.session_state.get("show_dev_modal", False):
-    with st.sidebar:
-        st.header("👨‍💻 Developer Details")
-        st.markdown("---")
-        st.markdown("**Name:** Kamrul Hasan Maruf  \n*(MARUF MD KAMRUL HASAN)*")
-        st.markdown("**STD ID:** `2617308`")
-        st.markdown("**Department:** Artificial Intelligence")
-        st.markdown("**Institution:** Kyungdong University Global")
-        st.markdown("---")
-        st.markdown("### 🌐 Connect Links")
-        st.markdown("- [GitHub Profile](https://github.com/iamkhm7)")
-        st.markdown("- [Instagram Profile](https://instagram.com/_iamkhm_)")
-        st.markdown("- [Facebook Profile](https://facebook.com/iamkhm)")
-        st.markdown("---")
-        if st.button("❌ Close Panel", use_container_width=True):
-            st.session_state.show_dev_modal = False
-            st.rerun()
-
-# 7. Groq Connection & System Prompt (Topic 84: Startup Co-Founder)
+# 7. Groq Connection & System Prompt
 client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+MODEL = "llama-3.1-8b-instant"
 
 SYSTEM_PROMPT = (
     "You are StartupMateAI, an expert startup co-founder, business strategist, and venture mentor. "
@@ -282,42 +276,37 @@ SYSTEM_PROMPT = (
     "3. Be objective, constructive, and realistic in startup critique."
 )
 
-@st.cache_data(ttl=3600)
-def get_model():
-    return "llama-3.1-8b-instant"
-
-selected_model = get_model()
-
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
 user_prompt = None
 
-# 8. Landing View
+# 8. Landing View (no conversation yet)
 if len(st.session_state.messages) == 1:
-    with st.container():
-        st.markdown('<div class="hero-heading">Let\'s create a startup.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-heading">Let\'s create a startup.</div>', unsafe_allow_html=True)
 
-        inline_input = st.chat_input("Pitch your startup idea or ask a question...")
-        if inline_input:
-            user_prompt = inline_input
+    inline_input = st.chat_input("Pitch your startup idea or ask a question...")
+    if inline_input:
+        user_prompt = inline_input
 
-        st.write("")
-        c1, c2, c3, c4 = st.columns(4)
-        if c1.button("💡 Brainstorm Idea", use_container_width=True):
-            user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
-        if c2.button("🔍 Validate with SWOT", use_container_width=True):
-            user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
-        if c3.button("🗺️ 30-Day Roadmap", use_container_width=True):
-            user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
-        if c4.button("📊 Pitch Deck Outline", use_container_width=True):
-            user_prompt = "Give me a 10-slide seed pitch deck structure for investors."
+    st.write("")
+    row1 = st.columns(2)
+    row2 = st.columns(2)
+
+    if row1[0].button("💡 Brainstorm Idea", use_container_width=True, key="qa_brainstorm"):
+        user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
+    if row1[1].button("🔍 Validate with SWOT", use_container_width=True, key="qa_swot"):
+        user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
+    if row2[0].button("🗺️ 30-Day Roadmap", use_container_width=True, key="qa_roadmap"):
+        user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
+    if row2[1].button("📊 Pitch Deck Outline", use_container_width=True, key="qa_pitch"):
+        user_prompt = "Give me a 10-slide seed pitch deck structure for investors."
 
 # 9. Active Chat View
 else:
     top_c1, top_c2 = st.columns([5, 1])
     with top_c2:
-        if st.button("↺ New Pitch", use_container_width=True):
+        if st.button("↺ New Pitch", use_container_width=True, key="new_pitch"):
             st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
             st.rerun()
 
@@ -335,22 +324,25 @@ else:
 if user_prompt:
     st.session_state.messages.append({"role": "user", "content": user_prompt})
 
-    if len(st.session_state.messages) == 2:
-        with st.chat_message("user", avatar="🧑‍💻"):
-            st.markdown(user_prompt)
+    # Show the new question right away (history above was rendered before it existed)
+    with st.chat_message("user", avatar="🧑‍💻"):
+        st.markdown(user_prompt)
 
+    reply = None
     with st.chat_message("assistant", avatar="🚀"):
         try:
             stream = client.chat.completions.create(
-                model=selected_model,
+                model=MODEL,
                 messages=st.session_state.messages,
                 stream=True,
             )
             reply = st.write_stream(
                 chunk.choices[0].delta.content or "" for chunk in stream
             )
-            st.session_state.messages.append({"role": "assistant", "content": reply})
-            if len(st.session_state.messages) == 3:
-                st.rerun()
         except Exception as e:
+            st.session_state.messages.pop()  # drop the unanswered prompt
             st.error(f"API Error: {e}")
+
+    if reply:
+        st.session_state.messages.append({"role": "assistant", "content": reply})
+        st.rerun()  # redraw cleanly in the active chat layout
