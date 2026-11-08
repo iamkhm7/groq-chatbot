@@ -25,6 +25,7 @@ if st.session_state.dark_mode:
     inner_bg = "#0f172a"
     placeholder_color = "#94a3b8"
     scheme = "dark"
+    input_border = "rgba(255, 255, 255, 0.14)"
 else:
     bg_color = "#f6f7fb"
     text_color = "#131b2e"
@@ -37,6 +38,7 @@ else:
     inner_bg = "#f3f4f8"
     placeholder_color = "#7b8494"
     scheme = "light"
+    input_border = "rgba(19, 27, 46, 0.10)"
 
 # 3. Dynamic Custom CSS & Layout Styling
 st.markdown(f"""
@@ -160,49 +162,56 @@ st.markdown(f"""
         animation: fadeUp 0.6s ease-out 0.05s both;
     }}
 
-    /* Chat Input Card */
+    /* Chat Input: minimal pill */
     [data-testid="stChatInput"] {{
         background: {input_bg} !important;
-        border-radius: 22px !important;
-        border: 1px solid {card_border} !important;
-        box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08) !important;
-        padding: 10px 14px 42px 14px !important;
+        border-radius: 999px !important;
+        border: 1px solid {input_border} !important;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.10), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        padding: 6px 56px 6px 22px !important;
         position: relative !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
     }}
-    [data-testid="stChatInput"] textarea {{
-        color: {text_color} !important;
-        font-size: 1rem !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    [data-testid="stChatInput"]:focus-within {{
+        border-color: #818cf8 !important;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.16), 0 0 0 4px rgba(129, 140, 248, 0.18) !important;
     }}
     [data-testid="stChatInput"] > div,
     [data-testid="stChatInput"] [data-baseweb="textarea"],
     [data-testid="stChatInput"] [data-baseweb="base-input"] {{
-        background: {inner_bg} !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 999px !important;
     }}
     [data-testid="stChatInput"] textarea {{
         background: transparent !important;
+        color: {text_color} !important;
+        font-size: 1rem !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        padding: 0.65rem 0 !important;
+        caret-color: #818cf8;
     }}
     [data-testid="stChatInput"] textarea::placeholder {{
         color: {placeholder_color} !important;
         opacity: 1 !important;
     }}
-    [data-testid="stChatInput"]::after {{
-        content: "💡";
-        position: absolute;
-        bottom: 12px;
-        left: 18px;
-        font-size: 0.95rem;
-        pointer-events: none;
-    }}
     [data-testid="stChatInputSubmitButton"] {{
         background-color: {text_color} !important;
         color: {bg_color} !important;
         border-radius: 50% !important;
-        width: 34px !important;
-        height: 34px !important;
+        width: 38px !important;
+        height: 38px !important;
+        padding: 0 !important;
         position: absolute !important;
-        bottom: 10px !important;
-        right: 14px !important;
+        top: 50% !important;
+        bottom: auto !important;
+        right: 8px !important;
+        transform: translateY(-50%);
+        transition: transform 0.2s ease !important;
+    }}
+    [data-testid="stChatInputSubmitButton"]:hover {{
+        transform: translateY(-50%) scale(1.07);
     }}
 
     /* Chat Messages */
@@ -316,6 +325,7 @@ st.markdown(f"""
             font-size: 0.78rem !important;
             padding: 0.45rem 0.4rem !important;
         }}
+        [data-testid="stChatInput"] {{ padding: 4px 52px 4px 16px !important; }}
         [data-testid="stChatInput"] textarea {{ font-size: 0.92rem !important; }}
         [data-testid="stChatMessage"] {{ padding: 12px 14px !important; }}
         .notice-full {{ display: none; }}
