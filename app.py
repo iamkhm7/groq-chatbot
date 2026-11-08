@@ -22,6 +22,9 @@ if st.session_state.dark_mode:
     pill_bg = "rgba(30, 41, 59, 0.8)"
     footer_bg = "rgba(15, 23, 42, 0.85)"
     brand_border = "#f8fafc"
+    inner_bg = "#0f172a"
+    placeholder_color = "#94a3b8"
+    scheme = "dark"
 else:
     bg_color = "#f6f7fb"
     text_color = "#131b2e"
@@ -31,6 +34,9 @@ else:
     pill_bg = "rgba(255, 255, 255, 0.72)"
     footer_bg = "rgba(246, 247, 251, 0.85)"
     brand_border = "#131b2e"
+    inner_bg = "#f3f4f8"
+    placeholder_color = "#7b8494"
+    scheme = "light"
 
 # 3. Dynamic Custom CSS & Layout Styling
 st.markdown(f"""
@@ -45,6 +51,7 @@ st.markdown(f"""
         color: {text_color} !important;
         font-family: 'Plus Jakarta Sans', sans-serif;
         overflow-x: hidden;
+        color-scheme: {scheme};
         transition: background-color 0.3s ease, color 0.3s ease;
     }}
 
@@ -142,7 +149,8 @@ st.markdown(f"""
     /* Heading */
     .hero-heading {{
         font-family: 'Instrument Serif', Georgia, serif;
-        font-size: 3.4rem;
+        font-size: clamp(2.1rem, 9vw, 3.4rem);
+        line-height: 1.1;
         font-weight: 400;
         color: {text_color};
         text-align: center;
@@ -165,6 +173,18 @@ st.markdown(f"""
         color: {text_color} !important;
         font-size: 1rem !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }}
+    [data-testid="stChatInput"] > div,
+    [data-testid="stChatInput"] [data-baseweb="textarea"],
+    [data-testid="stChatInput"] [data-baseweb="base-input"] {{
+        background: {inner_bg} !important;
+    }}
+    [data-testid="stChatInput"] textarea {{
+        background: transparent !important;
+    }}
+    [data-testid="stChatInput"] textarea::placeholder {{
+        color: {placeholder_color} !important;
+        opacity: 1 !important;
     }}
     [data-testid="stChatInput"]::after {{
         content: "💡";
@@ -201,6 +221,27 @@ st.markdown(f"""
         color: {text_color} !important;
     }}
 
+    div.stButton > button p {{
+        font-size: inherit !important;
+        line-height: 1.25 !important;
+        margin: 0 !important;
+    }}
+
+    /* Quick-action rows: keep 2 columns side by side on phones too */
+    div[data-testid="stHorizontalBlock"]:has(.qa-marker) {{
+        flex-wrap: nowrap !important;
+        gap: 0.6rem !important;
+    }}
+    div[data-testid="stHorizontalBlock"]:has(.qa-marker) > div {{
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        width: auto !important;
+    }}
+    div[data-testid="stElementContainer"]:has(.qa-marker),
+    div.element-container:has(.qa-marker) {{
+        display: none !important;
+    }}
+
     /* Top-right button bar (the row that contains the marker is pinned to the corner) */
     div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{
         position: fixed !important;
@@ -228,6 +269,7 @@ st.markdown(f"""
     }}
 
     /* Disclaimer & AI Notice */
+    .notice-short {{ display: none; }}
     .disclaimer-footer {{
         position: fixed;
         bottom: 10px;
@@ -241,11 +283,62 @@ st.markdown(f"""
         background: {footer_bg};
         padding: 4px;
     }}
+
+    /* ---------- Phones ---------- */
+    @media (max-width: 640px) {{
+        .block-container {{
+            padding-top: 4.8rem !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+            padding-bottom: 6rem !important;
+        }}
+        .fixed-top-nav {{ top: 14px; left: 12px; right: 12px; }}
+        .logo-badge {{
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            box-shadow: 2px 2px 0px {brand_border};
+        }}
+        .logo-badge svg {{ display: none; }}
+        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{
+            top: 14px;
+            right: 12px;
+            width: 220px !important;
+            max-width: none;
+            gap: 6px !important;
+        }}
+        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button {{
+            padding: 0.3rem 0.3rem !important;
+            font-size: 0.72rem !important;
+            white-space: nowrap !important;
+        }}
+        .hero-heading {{ margin-top: 2vh; margin-bottom: 1.2rem; }}
+        div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {{
+            font-size: 0.78rem !important;
+            padding: 0.45rem 0.4rem !important;
+        }}
+        [data-testid="stChatInput"] textarea {{ font-size: 0.92rem !important; }}
+        [data-testid="stChatMessage"] {{ padding: 12px 14px !important; }}
+        .notice-full {{ display: none; }}
+        .notice-short {{ display: inline; }}
+        .disclaimer-footer {{
+            bottom: 6px;
+            font-size: 0.62rem;
+            padding: 4px 76px 4px 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }}
+    }}
+    @media (max-width: 380px) {{
+        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{ width: 200px !important; }}
+        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button {{ font-size: 0.66rem !important; }}
+    }}
 </style>
 
 <div class="aurora-bg"></div>
 <div class="disclaimer-footer">
-    ⚡ AI Notice: Content is AI-generated and can contain mistakes. Not professional business/legal advice. Human verification required.
+    <span class="notice-full">⚡ AI Notice: Content is AI-generated and can contain mistakes. Not professional business/legal advice. Human verification required.</span>
+    <span class="notice-short">⚡ AI-generated, may contain mistakes. Verify before use.</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -405,13 +498,17 @@ user_prompt = None
 if len(st.session_state.messages) == 1:
     st.markdown('<div class="hero-heading">Let\'s create a startup.</div>', unsafe_allow_html=True)
 
-    inline_input = st.chat_input("Pitch your startup idea or ask a question...")
+    inline_input = st.chat_input("Pitch your idea or ask anything...")
     if inline_input:
         user_prompt = inline_input
 
     st.write("")
     row1 = st.columns(2)
     row2 = st.columns(2)
+    with row1[0]:
+        st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
+    with row2[0]:
+        st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
 
     if row1[0].button("💡 Brainstorm Idea", use_container_width=True, key="qa_brainstorm"):
         user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
