@@ -236,19 +236,40 @@ st.markdown(f"""
         margin: 0 !important;
     }}
 
-    /* Quick-action rows: keep 2 columns side by side on phones too */
+    /* Quick-action chips: one centered line, minimal outline style */
     div[data-testid="stHorizontalBlock"]:has(.qa-marker) {{
         flex-wrap: nowrap !important;
+        justify-content: safe center;
         gap: 0.6rem !important;
+        overflow-x: auto;
+        padding: 4px 2px 8px 2px;
+        scrollbar-width: none;
     }}
+    div[data-testid="stHorizontalBlock"]:has(.qa-marker)::-webkit-scrollbar {{ display: none; }}
     div[data-testid="stHorizontalBlock"]:has(.qa-marker) > div {{
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
+        flex: 0 0 auto !important;
         width: auto !important;
+        min-width: 0 !important;
     }}
     div[data-testid="stElementContainer"]:has(.qa-marker),
     div.element-container:has(.qa-marker) {{
         display: none !important;
+    }}
+    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {{
+        background: transparent !important;
+        backdrop-filter: none !important;
+        border: 1px solid {input_border} !important;
+        box-shadow: none !important;
+        color: {text_color} !important;
+        padding: 0.45rem 1.05rem !important;
+        font-size: 0.85rem !important;
+        white-space: nowrap !important;
+    }}
+    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button:hover {{
+        background: rgba(129, 140, 248, 0.10) !important;
+        border-color: #818cf8 !important;
+        box-shadow: none !important;
+        transform: none !important;
     }}
 
     /* Top-right button bar (the row that contains the marker is pinned to the corner) */
@@ -322,8 +343,8 @@ st.markdown(f"""
         }}
         .hero-heading {{ margin-top: 2vh; margin-bottom: 1.2rem; }}
         div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {{
-            font-size: 0.78rem !important;
-            padding: 0.45rem 0.4rem !important;
+            font-size: 0.8rem !important;
+            padding: 0.4rem 0.9rem !important;
         }}
         [data-testid="stChatInput"] {{ padding: 4px 52px 4px 16px !important; }}
         [data-testid="stChatInput"] textarea {{ font-size: 0.92rem !important; }}
@@ -513,21 +534,16 @@ if len(st.session_state.messages) == 1:
         user_prompt = inline_input
 
     st.write("")
-    row1 = st.columns(2)
-    row2 = st.columns(2)
-    with row1[0]:
-        st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
-    with row2[0]:
+    qa = st.columns(3)
+    with qa[0]:
         st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
 
-    if row1[0].button("💡 Brainstorm Idea", use_container_width=True, key="qa_brainstorm"):
+    if qa[0].button("💡 Brainstorm Idea", key="qa_brainstorm"):
         user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
-    if row1[1].button("🔍 Validate with SWOT", use_container_width=True, key="qa_swot"):
+    if qa[1].button("🔍 Validate with SWOT", key="qa_swot"):
         user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
-    if row2[0].button("🗺️ 30-Day Roadmap", use_container_width=True, key="qa_roadmap"):
+    if qa[2].button("🗺️ 30-Day Roadmap", key="qa_roadmap"):
         user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
-    if row2[1].button("📊 Pitch Deck Outline", use_container_width=True, key="qa_pitch"):
-        user_prompt = "Give me a 10-slide seed pitch deck structure for investors."
 
 # 9. Active Chat View
 else:
