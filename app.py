@@ -43,7 +43,7 @@ else:
     grid_color = "rgba(15, 23, 42, 0.04)"
 
 # 3. Dynamic Custom CSS & Modern Animations
-st.markdown(f"""
+st.markdown(f""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
