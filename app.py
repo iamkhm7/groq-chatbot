@@ -14,578 +14,76 @@ if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
 if st.session_state.dark_mode:
-    bg_color = "#0f172a"
+    bg_color = "#0b0f19"
     text_color = "#f8fafc"
-    card_bg = "rgba(30, 41, 59, 0.85)"
-    card_border = "rgba(255, 255, 255, 0.1)"
-    input_bg = "#1e293b"
-    pill_bg = "rgba(30, 41, 59, 0.8)"
-    footer_bg = "rgba(15, 23, 42, 0.85)"
-    brand_border = "#f8fafc"
-    inner_bg = "#0f172a"
-    placeholder_color = "#94a3b8"
+    muted_text = "#94a3b8"
+    card_bg = "rgba(30, 41, 59, 0.72)"
+    card_border = "rgba(148, 163, 184, 0.16)"
+    input_bg = "rgba(15, 23, 42, 0.88)"
+    pill_bg = "rgba(30, 41, 59, 0.75)"
+    footer_bg = "rgba(11, 15, 25, 0.85)"
+    brand_border = "#818cf8"
+    placeholder_color = "#64748b"
     scheme = "dark"
-    input_border = "rgba(255, 255, 255, 0.14)"
+    input_border = "rgba(129, 140, 248, 0.28)"
+    grid_color = "rgba(255, 255, 255, 0.04)"
 else:
-    bg_color = "#f6f7fb"
-    text_color = "#131b2e"
+    bg_color = "#f8f9fc"
+    text_color = "#0f172a"
+    muted_text = "#64748b"
     card_bg = "rgba(255, 255, 255, 0.82)"
-    card_border = "rgba(255, 255, 255, 0.95)"
-    input_bg = "#ffffff"
-    pill_bg = "rgba(255, 255, 255, 0.72)"
-    footer_bg = "rgba(246, 247, 251, 0.85)"
-    brand_border = "#131b2e"
-    inner_bg = "#f3f4f8"
-    placeholder_color = "#7b8494"
+    card_border = "rgba(226, 232, 240, 0.95)"
+    input_bg = "rgba(255, 255, 255, 0.95)"
+    pill_bg = "rgba(255, 255, 255, 0.80)"
+    footer_bg = "rgba(248, 249, 252, 0.85)"
+    brand_border = "#1e293b"
+    placeholder_color = "#94a3b8"
     scheme = "light"
-    input_border = "rgba(19, 27, 46, 0.10)"
+    input_border = "rgba(99, 102, 241, 0.22)"
+    grid_color = "rgba(15, 23, 42, 0.04)"
 
-# 3. Dynamic Custom CSS & Layout Styling
+# 3. Dynamic Custom CSS & Modern Animations
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     #MainMenu, header, footer {{visibility: hidden;}}
     [data-testid="stToolbar"] {{display: none;}}
 
     .stApp {{
         background-color: {bg_color} !important;
+        background-image: radial-gradient({grid_color} 1px, transparent 1px) !important;
+        background-size: 24px 24px !important;
         color: {text_color} !important;
         font-family: 'Plus Jakarta Sans', sans-serif;
         overflow-x: hidden;
         color-scheme: {scheme};
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition: background-color 0.35s ease, color 0.35s ease;
     }}
 
-    /* Ambient Aurora Glow */
-    .aurora-bg {{
+    /* Multi-Orb Animated Mesh Background */
+    .aurora-container {{
         position: fixed;
-        bottom: -22vh;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 78vw;
-        max-width: 960px;
-        height: 62vh;
-        background: radial-gradient(
-            circle at 50% 65%,
-            rgba(253, 186, 140, 0.55) 0%,
-            rgba(167, 139, 250, 0.45) 38%,
-            rgba(129, 140, 248, 0.35) 62%,
-            transparent 78%
-        );
-        filter: blur(52px);
+        inset: 0;
+        overflow: hidden;
         z-index: 0;
         pointer-events: none;
-        animation: auroraFloat 7s ease-in-out infinite alternate;
     }}
-
-    @keyframes auroraFloat {{
-        0% {{ transform: translateX(-50%) scale(0.96) translateY(8px); opacity: 0.7; }}
-        100% {{ transform: translateX(-50%) scale(1.05) translateY(-10px); opacity: 0.95; }}
+    .orb {{
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(64px);
+        opacity: 0.65;
     }}
-
-    @keyframes fadeUp {{
-        from {{ opacity: 0; transform: translateY(14px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
+    .orb-1 {{
+        width: 42vw;
+        height: 42vw;
+        max-width: 520px;
+        max-height: 520px;
+        bottom: -12vh;
+        left: 18%;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.55) 0%, rgba(99, 102, 241, 0.25) 60%, transparent 80%);
+        animation: floatOrb1 9s ease-in-out infinite alternate;
     }}
-
-    .block-container {{
-        position: relative;
-        z-index: 2;
-        padding-top: 6.5rem !important;
-        padding-bottom: 5rem !important;
-        max-width: 760px !important;
-    }}
-
-    /* Fixed Header Anchored to Top Corners */
-    .fixed-top-nav {{
-        position: fixed;
-        top: 20px;
-        left: 28px;
-        right: 28px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 99999;
-        pointer-events: none;
-    }}
-
-    .pointer-events-auto {{
-        pointer-events: auto;
-    }}
-
-    .logo-badge {{
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        border: 1.5px solid {brand_border};
-        border-radius: 999px;
-        padding: 6px 16px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: {text_color};
-        background: {input_bg};
-        box-shadow: 2px 3px 0px {brand_border};
-        transition: all 0.3s ease;
-    }}
-
-    /* Button Styling */
-    div.stButton > button {{
-        background: {pill_bg} !important;
-        backdrop-filter: blur(10px) !important;
-        color: {text_color} !important;
-        border: 1px solid {card_border} !important;
-        border-radius: 999px !important;
-        padding: 0.4rem 1rem !important;
-        font-size: 0.85rem !important;
-        font-weight: 500 !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
-        transition: all 0.22s ease !important;
-    }}
-    div.stButton > button:hover {{
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15) !important;
-        border-color: #818cf8 !important;
-    }}
-
-    /* Heading */
-    .hero-heading {{
-        font-family: 'Instrument Serif', Georgia, serif;
-        font-size: clamp(2.1rem, 9vw, 3.4rem);
-        line-height: 1.1;
-        font-weight: 400;
-        color: {text_color};
-        text-align: center;
-        margin-top: 8vh;
-        margin-bottom: 1.8rem;
-        letter-spacing: -0.02em;
-        animation: fadeUp 0.6s ease-out 0.05s both;
-    }}
-
-    /* Chat Input: minimal pill */
-    [data-testid="stChatInput"] {{
-        background: {input_bg} !important;
-        border-radius: 999px !important;
-        border: 1px solid {input_border} !important;
-        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.10), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-        padding: 6px 56px 6px 22px !important;
-        position: relative !important;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-    }}
-    [data-testid="stChatInput"]:focus-within {{
-        border-color: #818cf8 !important;
-        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.16), 0 0 0 4px rgba(129, 140, 248, 0.18) !important;
-    }}
-    [data-testid="stChatInput"] > div,
-    [data-testid="stChatInput"] [data-baseweb="textarea"],
-    [data-testid="stChatInput"] [data-baseweb="base-input"] {{
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 999px !important;
-    }}
-    [data-testid="stChatInput"] textarea {{
-        background: transparent !important;
-        color: {text_color} !important;
-        font-size: 1rem !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        padding: 0.65rem 0 !important;
-        caret-color: #818cf8;
-    }}
-    [data-testid="stChatInput"] textarea::placeholder {{
-        color: {placeholder_color} !important;
-        opacity: 1 !important;
-    }}
-    [data-testid="stChatInputSubmitButton"] {{
-        background-color: {text_color} !important;
-        color: {bg_color} !important;
-        border-radius: 50% !important;
-        width: 38px !important;
-        height: 38px !important;
-        padding: 0 !important;
-        position: absolute !important;
-        top: 50% !important;
-        bottom: auto !important;
-        right: 8px !important;
-        transform: translateY(-50%);
-        transition: transform 0.2s ease !important;
-    }}
-    [data-testid="stChatInputSubmitButton"]:hover {{
-        transform: translateY(-50%) scale(1.07);
-    }}
-
-    /* Chat Messages */
-    [data-testid="stChatMessage"] {{
-        background: {card_bg} !important;
-        backdrop-filter: blur(12px) !important;
-        border: 1px solid {card_border} !important;
-        border-radius: 18px !important;
-        padding: 14px 18px !important;
-        margin-bottom: 12px !important;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04) !important;
-        color: {text_color} !important;
-        animation: fadeUp 0.35s ease-out both;
-    }}
-    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li, [data-testid="stChatMessage"] span {{
-        color: {text_color} !important;
-    }}
-
-    div.stButton > button p {{
-        font-size: inherit !important;
-        line-height: 1.25 !important;
-        margin: 0 !important;
-    }}
-
-    /* Quick-action chips: one centered line, minimal outline style */
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) {{
-        flex-wrap: nowrap !important;
-        justify-content: safe center;
-        gap: 0.6rem !important;
-        overflow-x: auto;
-        padding: 4px 2px 8px 2px;
-        scrollbar-width: none;
-    }}
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker)::-webkit-scrollbar {{ display: none; }}
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) > div {{
-        flex: 0 0 auto !important;
-        width: auto !important;
-        min-width: 0 !important;
-    }}
-    div[data-testid="stElementContainer"]:has(.qa-marker),
-    div.element-container:has(.qa-marker) {{
-        display: none !important;
-    }}
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {{
-        background: transparent !important;
-        backdrop-filter: none !important;
-        border: 1px solid {input_border} !important;
-        box-shadow: none !important;
-        color: {text_color} !important;
-        padding: 0.45rem 1.05rem !important;
-        font-size: 0.85rem !important;
-        white-space: nowrap !important;
-    }}
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button:hover {{
-        background: rgba(129, 140, 248, 0.10) !important;
-        border-color: #818cf8 !important;
-        box-shadow: none !important;
-        transform: none !important;
-    }}
-
-    /* Top-right button bar (the row that contains the marker is pinned to the corner) */
-    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{
-        position: fixed !important;
-        top: 20px;
-        right: 28px;
-        width: 270px !important;
-        max-width: calc(100vw - 200px);
-        gap: 10px !important;
-        flex-wrap: nowrap !important;
-        z-index: 99999;
-    }}
-    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) > div {{
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-        width: auto !important;
-    }}
-    div[data-testid="stElementContainer"]:has(.topbar-marker),
-    div.element-container:has(.topbar-marker) {{
-        display: none !important;
-    }}
-
-    /* Let the aurora show behind the chat input bar */
-    [data-testid="stBottom"], [data-testid="stBottom"] > div {{
-        background: transparent !important;
-    }}
-
-    /* Disclaimer & AI Notice */
-    .notice-short {{ display: none; }}
-    .disclaimer-footer {{
-        position: fixed;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 0.73rem;
-        color: #94a3b8;
-        z-index: 10;
-        pointer-events: none;
-        background: {footer_bg};
-        padding: 4px;
-    }}
-
-    /* ---------- Phones ---------- */
-    @media (max-width: 640px) {{
-        .block-container {{
-            padding-top: 4.8rem !important;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            padding-bottom: 6rem !important;
-        }}
-        .fixed-top-nav {{ top: 14px; left: 12px; right: 12px; }}
-        .logo-badge {{
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            box-shadow: 2px 2px 0px {brand_border};
-        }}
-        .logo-badge svg {{ display: none; }}
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{
-            top: 14px;
-            right: 12px;
-            width: 220px !important;
-            max-width: none;
-            gap: 6px !important;
-        }}
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button {{
-            padding: 0.3rem 0.3rem !important;
-            font-size: 0.72rem !important;
-            white-space: nowrap !important;
-        }}
-        .hero-heading {{ margin-top: 2vh; margin-bottom: 1.2rem; }}
-        div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {{
-            font-size: 0.8rem !important;
-            padding: 0.4rem 0.9rem !important;
-        }}
-        [data-testid="stChatInput"] {{ padding: 4px 52px 4px 16px !important; }}
-        [data-testid="stChatInput"] textarea {{ font-size: 0.92rem !important; }}
-        [data-testid="stChatMessage"] {{ padding: 12px 14px !important; }}
-        .notice-full {{ display: none; }}
-        .notice-short {{ display: inline; }}
-        .disclaimer-footer {{
-            bottom: 6px;
-            font-size: 0.62rem;
-            padding: 4px 76px 4px 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }}
-    }}
-    @media (max-width: 380px) {{
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {{ width: 200px !important; }}
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button {{ font-size: 0.66rem !important; }}
-    }}
-</style>
-
-<div class="aurora-bg"></div>
-<div class="disclaimer-footer">
-    <span class="notice-full">⚡ AI Notice: Content is AI-generated and can contain mistakes. Not professional business/legal advice. Human verification required.</span>
-    <span class="notice-short">⚡ AI-generated, may contain mistakes. Verify before use.</span>
-</div>
-""", unsafe_allow_html=True)
-
-# 4. Logo on Top-Left
-st.markdown("""
-<div class="fixed-top-nav">
-    <div class="pointer-events-auto">
-        <div class="logo-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            StartupMateAI
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# 5. Developer Details Dialog (requires streamlit>=1.37)
-@st.dialog("Developer Details")
-def show_developer():
-    st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap');
-div[role="dialog"] {{
-    background: {bg_color} !important;
-    border-radius: 24px !important;
-}}
-div[role="dialog"] button[aria-label="Close"],
-div[role="dialog"] button[aria-label="Close"] svg {{
-    color: {text_color} !important;
-}}
-div[role="dialog"] h2 {{
-    font-family: 'Patrick Hand SC', cursive !important;
-    font-size: 1.5rem !important;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: {text_color} !important;
-    text-align: center;
-    width: fit-content;
-    margin: 0 auto !important;
-    padding: 0.35rem 1.6rem !important;
-    border: 4px solid transparent;
-    border-radius: 999px;
-    background:
-        linear-gradient({bg_color}, {bg_color}) padding-box,
-        linear-gradient(90deg, #e0678f, #f9a8c0) border-box;
-}}
-.dev-card {{
-    font-family: 'Patrick Hand SC', cursive;
-    color: {text_color} !important;
-    background: {bg_color};
-    border-radius: 18px;
-    padding: 0.5rem 0.4rem 0.2rem 0.4rem;
-}}
-.dev-card div, .dev-card span, .dev-card a {{
-    color: {text_color};
-}}
-.dev-name {{
-    font-size: 1.6rem;
-    letter-spacing: 0.05em;
-    line-height: 1.5;
-}}
-.dev-info {{
-    font-size: 1.25rem;
-    letter-spacing: 0.06em;
-    line-height: 1.55;
-    margin-top: 0.6rem;
-}}
-.dev-more {{
-    text-align: center;
-    margin: 1.6rem 0 1.2rem 0;
-}}
-.dev-more summary {{
-    display: inline-block;
-    list-style: none;
-    cursor: pointer;
-    background: #cbd5e1;
-    color: #131b2e;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 1rem;
-    padding: 0.55rem 1.4rem;
-    border-radius: 999px;
-}}
-.dev-more summary::-webkit-details-marker {{ display: none; }}
-.dev-extra {{
-    font-size: 1.1rem;
-    letter-spacing: 0.04em;
-    margin-top: 0.9rem;
-}}
-.dev-social {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 0.4rem;
-}}
-.dev-social a {{
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: {text_color} !important;
-    text-decoration: none !important;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 700;
-    font-size: 1.15rem;
-}}
-.dev-social a:hover {{ opacity: 0.7; }}
-</style>
-<div class="dev-card">
-<div class="dev-name">Kamrul Hasan Maruf</div>
-<div class="dev-name">(Maruf MD Kamrul Hasan)</div>
-<div class="dev-info">2617308<br>Department of Artificial Intelligence<br>Kyungdong University Global<br>South Korea</div>
-<details class="dev-more"><summary>More</summary><div class="dev-extra">Built with Streamlit and Groq (Llama 3.1).</div></details>
-<div class="dev-social">
-<a href="https://github.com/iamkhm7" target="_blank"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub</a>
-<a href="https://instagram.com/_iamkhm_" target="_blank"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a>
-<a href="https://facebook.com/iamkhm" target="_blank"><svg width="26" height="26" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.7V4.6c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.3H7.7V14h2.7v8z" fill="{bg_color}"/></svg>facebook</a>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# 6. Top-Right Buttons (Dark Mode Toggle & Developer Info), pinned to the top-right corner
-btn_col1, btn_col2 = st.columns(2)
-
-with btn_col1:
-    st.markdown('<div class="topbar-marker"></div>', unsafe_allow_html=True)
-    toggle_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
-    if st.button(toggle_label, use_container_width=True, key="theme_toggle"):
-        st.session_state.dark_mode = not st.session_state.dark_mode
-        st.rerun()
-
-with btn_col2:
-    if st.button("👨‍💻 Developer", use_container_width=True, key="dev_btn"):
-        show_developer()
-
-# 7. Groq Connection & System Prompt
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-MODEL = "openai/gpt-oss-20b"  # replaces llama-3.1-8b-instant (shut down by Groq on 2026-08-16)
-
-SYSTEM_PROMPT = (
-    "You are StartupMateAI, an expert startup co-founder, business strategist, and venture mentor. "
-    "Your objective is to help founders brainstorm ideas, test market viability, construct SWOT analyses, "
-    "and build structured execution roadmaps. "
-    "SAFETY & DISCLAIMER RULES:\n"
-    "1. Always remind users that financial, legal, and tax projections are simulated and require professional verification.\n"
-    "2. If a user mentions self-harm, danger, illegal activity, or severe distress, immediately stop business advice, express care, and instruct them to contact emergency services or trusted authorities.\n"
-    "3. Be objective, constructive, and realistic in startup critique."
-)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-
-user_prompt = None
-
-# 8. Landing View (no conversation yet)
-if len(st.session_state.messages) == 1:
-    st.markdown('<div class="hero-heading">Let\'s create a startup.</div>', unsafe_allow_html=True)
-
-    inline_input = st.chat_input("Pitch your idea or ask anything...")
-    if inline_input:
-        user_prompt = inline_input
-
-    st.write("")
-    qa = st.columns(3)
-    with qa[0]:
-        st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
-
-    if qa[0].button("💡 Brainstorm Idea", key="qa_brainstorm"):
-        user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
-    if qa[1].button("🔍 Validate with SWOT", key="qa_swot"):
-        user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
-    if qa[2].button("🗺️ 30-Day Roadmap", key="qa_roadmap"):
-        user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
-
-# 9. Active Chat View
-else:
-    top_c1, top_c2 = st.columns([5, 1])
-    with top_c2:
-        if st.button("↺ New Pitch", use_container_width=True, key="new_pitch"):
-            st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-            st.rerun()
-
-    for msg in st.session_state.messages:
-        if msg["role"] != "system":
-            avatar = "🧑‍💻" if msg["role"] == "user" else "🚀"
-            with st.chat_message(msg["role"], avatar=avatar):
-                st.markdown(msg["content"])
-
-    docked_input = st.chat_input("Ask your co-founder anything...")
-    if docked_input:
-        user_prompt = docked_input
-
-# 10. Response Generation
-if user_prompt:
-    st.session_state.messages.append({"role": "user", "content": user_prompt})
-
-    # Show the new question right away (history above was rendered before it existed)
-    with st.chat_message("user", avatar="🧑‍💻"):
-        st.markdown(user_prompt)
-
-    reply = None
-    with st.chat_message("assistant", avatar="🚀"):
-        try:
-            stream = client.chat.completions.create(
-                model=MODEL,
-                messages=st.session_state.messages,
-                stream=True,
-            )
-            reply = st.write_stream(
-                chunk.choices[0].delta.content or "" for chunk in stream
-            )
-        except Exception as e:
-            st.session_state.messages.pop()  # drop the unanswered prompt
-            st.error(f"API Error: {e}")
-
-    if reply:
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-        st.rerun()  # redraw cleanly in the active chat layout
+    .orb-2 {{
+        width:
