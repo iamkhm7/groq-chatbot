@@ -1,0 +1,9 @@
+# Save this file in your repo as:  .streamlit/config.toml
+# It keeps the app in the light theme even when a phone is set to dark mode.
+[theme]
+base = "light"
+primaryColor = "#8058ef"
+backgroundColor = "#faf8ff"
+secondaryBackgroundColor = "#f1ecff"
+textColor = "#19172b"
+font = "sans serif"
