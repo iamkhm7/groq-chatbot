@@ -225,6 +225,41 @@ st.markdown(
         border-color:rgba(145,111,239,.72) !important;
         box-shadow:0 14px 38px var(--shadow), 0 0 0 3px rgba(145,111,239,.10) !important;
     }}
+
+    /*
+      IMPORTANT: Streamlit/BaseWeb renders a separate white textarea surface
+      inside the chat-input shell. Make every inner layer transparent so the
+      only visible surface is the outer pill defined above.
+    */
+    [data-testid="stChatInput"] > div,
+    [data-testid="stChatInput"] > div > div,
+    [data-testid="stChatInput"] form,
+    [data-testid="stChatInput"] [data-baseweb="textarea"],
+    [data-testid="stChatInput"] [data-baseweb="base-input"],
+    [data-testid="stChatInput"] [data-baseweb="input"],
+    [data-testid="stChatInput"] textarea {{
+        background:transparent !important;
+        background-color:transparent !important;
+        border:0 !important;
+        outline:0 !important;
+        box-shadow:none !important;
+    }}
+    [data-testid="stChatInput"] textarea {{
+        color:var(--text) !important;
+        -webkit-text-fill-color:var(--text) !important;
+        caret-color:#a58af2 !important;
+        resize:none !important;
+    }}
+    [data-testid="stChatInput"] textarea::placeholder {{
+        color:var(--muted) !important;
+        -webkit-text-fill-color:var(--muted) !important;
+        opacity:1 !important;
+    }}
+    [data-testid="stChatInput"] [data-baseweb="textarea"]:focus-within,
+    [data-testid="stChatInput"] [data-baseweb="base-input"]:focus-within {{
+        background:transparent !important;
+        box-shadow:none !important;
+    }}
     [data-testid="stChatInput"] textarea {{
         color:var(--text) !important;
         caret-color:#9b72ef !important;
