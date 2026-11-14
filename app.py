@@ -361,18 +361,129 @@ with header_right:
             st.session_state.dark_mode = not st.session_state.dark_mode
             st.rerun()
 
-    @st.dialog("A little about the builder")
+    @st.dialog("Meet the team")
     def show_developer():
         st.markdown(
             """
-            <div style="text-align:center;line-height:1.9">
-              <div style="font-size:25px;font-weight:800;color:var(--text)">Kamrul Hasan Maruf</div>
-              <div style="color:#a58af2;font-weight:700">AI Student · StartupMate AI</div>
-              <p>Department of Artificial Intelligence<br>
-              Kyungdong University Global · South Korea</p>
-              <p><b>Built with:</b> Streamlit + Groq AI</p>
-              <p style="font-size:12px;color:var(--muted)">Making startup planning less intimidating—and slightly less boring.</p>
-              <a style="color:#a58af2" href="https://github.com/iamkhm7" target="_blank">GitHub profile ↗</a>
+            <style>
+              /* Developer dialog content */
+              [data-testid="stDialog"] .dev-profile,
+              [role="dialog"] .dev-profile {
+                color: var(--text) !important;
+                text-align: center;
+                line-height: 1.65;
+              }
+              .dev-kicker {
+                display: inline-block;
+                margin: 2px 0 12px;
+                padding: 5px 11px;
+                border: 1px solid rgba(153, 119, 239, .28);
+                border-radius: 999px;
+                color: #a58af2 !important;
+                background: rgba(153, 119, 239, .10);
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 1.1px;
+                text-transform: uppercase;
+              }
+              .dev-name {
+                color: var(--text) !important;
+                font-size: 23px;
+                font-weight: 800;
+                letter-spacing: -.5px;
+                line-height: 1.25;
+                margin: 3px 0 5px;
+              }
+              .dev-role {
+                color: #a58af2 !important;
+                font-size: 13px;
+                font-weight: 700;
+                margin-bottom: 13px;
+              }
+              .dev-education {
+                color: var(--muted) !important;
+                font-size: 13px;
+                line-height: 1.8;
+                margin: 0 0 17px;
+              }
+              .dev-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin: 2px 0 20px;
+                padding: 9px 17px;
+                border-radius: 999px;
+                background: linear-gradient(110deg, #8058ef, #bd4dd5);
+                color: #fff !important;
+                font-size: 12px;
+                font-weight: 800;
+                text-decoration: none !important;
+                box-shadow: 0 7px 18px rgba(137, 91, 230, .22);
+              }
+              .dev-divider {
+                height: 1px;
+                width: 100%;
+                background: var(--border);
+                margin: 2px 0 15px;
+              }
+              .team-heading {
+                color: var(--text) !important;
+                text-align: left;
+                font-size: 12px;
+                font-weight: 800;
+                letter-spacing: .4px;
+                margin: 0 0 10px;
+              }
+              .team-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                text-align: left;
+              }
+              .team-member {
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: var(--surface-soft);
+                color: var(--text) !important;
+                padding: 10px 11px;
+                font-size: 12px;
+                font-weight: 700;
+              }
+              .team-member span {
+                display: block;
+                color: var(--muted) !important;
+                font-size: 9px;
+                font-weight: 600;
+                letter-spacing: .7px;
+                text-transform: uppercase;
+                margin-bottom: 3px;
+              }
+              @media(max-width:480px) {
+                .team-grid { grid-template-columns: 1fr; }
+                .dev-name { font-size: 20px; }
+              }
+            </style>
+
+            <div class="dev-profile">
+              <div class="dev-kicker">StartupMate AI · Project Team</div>
+              <div class="dev-name">MARUF MD KAMRUL HASAN</div>
+              <div class="dev-role">Main Developer</div>
+              <p class="dev-education">
+                Student<br>
+                Department of Artificial Intelligence<br>
+                Kyungdong University Global
+              </p>
+              <a class="dev-link" href="https://linktr.ee/iamkhm" target="_blank" rel="noopener noreferrer">
+                More about the developer ↗
+              </a>
+
+              <div class="dev-divider"></div>
+              <div class="team-heading">OTHER PROJECT MEMBERS</div>
+              <div class="team-grid">
+                <div class="team-member"><span>Project member</span>Sirjan Batala</div>
+                <div class="team-member"><span>Project member</span>Ahmed Md Kazi Rakesh</div>
+                <div class="team-member"><span>Project member</span>Manish Dubey</div>
+              </div>
             </div>
             """,
             unsafe_allow_html=True,
