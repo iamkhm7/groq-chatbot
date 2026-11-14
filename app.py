@@ -1,733 +1,392 @@
 import streamlit as st
 from groq import Groq
 
-# 1. Page Configuration
+# ---------------------------------------------------------
+# StartupMate AI — Streamlit redesign
+# Keeps the existing Groq-powered chat and quick actions.
+# ---------------------------------------------------------
+
 st.set_page_config(
-    page_title="StartupMateAI - Your AI Co-Founder",
+    page_title="StartupMate AI — Your AI Co-Founder",
     page_icon="🚀",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-# 2. Theme State Management
+# ------------------------- State -------------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-if st.session_state.dark_mode:
-    theme_vars = """
-    :root {
-        --bg-color: #0b0f19;
-        --text-color: #f8fafc;
-        --muted-text: #94a3b8;
-        --card-bg: rgba(30, 41, 59, 0.72);
-        --card-border: rgba(148, 163, 184, 0.16);
-        --input-bg: rgba(15, 23, 42, 0.88);
-        --pill-bg: rgba(30, 41, 59, 0.75);
-        --footer-bg: rgba(11, 15, 25, 0.85);
-        --brand-border: #818cf8;
-        --placeholder-color: #64748b;
-        --scheme: dark;
-        --input-border: rgba(129, 140, 248, 0.28);
-        --grid-color: rgba(255, 255, 255, 0.04);
-    }
-    """
-    bg_color = "#0b0f19"
-    text_color = "#f8fafc"
-    muted_text = "#94a3b8"
-    pill_bg = "rgba(30, 41, 59, 0.75)"
-    card_border = "rgba(148, 163, 184, 0.16)"
-else:
-    theme_vars = """
-    :root {
-        --bg-color: #f8f9fc;
-        --text-color: #0f172a;
-        --muted-text: #64748b;
-        --card-bg: rgba(255, 255, 255, 0.82);
-        --card-border: rgba(226, 232, 240, 0.95);
-        --input-bg: rgba(255, 255, 255, 0.95);
-        --pill-bg: rgba(255, 255, 255, 0.80);
-        --footer-bg: rgba(248, 249, 252, 0.85);
-        --brand-border: #1e293b;
-        --placeholder-color: #94a3b8;
-        --scheme: light;
-        --input-border: rgba(99, 102, 241, 0.22);
-        --grid-color: rgba(15, 23, 42, 0.04);
-    }
-    """
-    bg_color = "#f8f9fc"
-    text_color = "#0f172a"
-    muted_text = "#64748b"
-    pill_bg = "rgba(255, 255, 255, 0.80)"
-    card_border = "rgba(226, 232, 240, 0.95)"
-
-st.markdown(f"<style>{theme_vars}</style>", unsafe_allow_html=True)
-
-# 3. Main Stylesheet & Animations
-# NOTE: keep this whole block inside the triple quotes. Do not let an editor wrap lines inside it.
-st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-    #MainMenu, header, footer {visibility: hidden;}
-    [data-testid="stToolbar"] {display: none;}
-
-    .stApp {
-        background-color: var(--bg-color) !important;
-        background-image: radial-gradient(var(--grid-color) 1px, transparent 1px) !important;
-        background-size: 24px 24px !important;
-        color: var(--text-color) !important;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        overflow-x: hidden;
-        color-scheme: var(--scheme);
-        transition: background-color 0.35s ease, color 0.35s ease;
-    }
-
-    /* Multi-Orb Animated Mesh Background */
-    .aurora-container {
-        position: fixed;
-        inset: 0;
-        overflow: hidden;
-        z-index: 0;
-        pointer-events: none;
-    }
-    .orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(64px);
-        opacity: 0.65;
-    }
-    .orb-1 {
-        width: 42vw;
-        height: 42vw;
-        max-width: 520px;
-        max-height: 520px;
-        bottom: -12vh;
-        left: 18%;
-        background: radial-gradient(circle, rgba(168, 85, 247, 0.55) 0%, rgba(99, 102, 241, 0.25) 60%, transparent 80%);
-        animation: floatOrb1 9s ease-in-out infinite alternate;
-    }
-    .orb-2 {
-        width: 38vw;
-        height: 38vw;
-        max-width: 480px;
-        max-height: 480px;
-        bottom: -15vh;
-        right: 16%;
-        background: radial-gradient(circle, rgba(251, 146, 60, 0.50) 0%, rgba(236, 72, 153, 0.35) 55%, transparent 80%);
-        animation: floatOrb2 11s ease-in-out infinite alternate;
-    }
-    .orb-3 {
-        width: 28vw;
-        height: 28vw;
-        max-width: 360px;
-        max-height: 360px;
-        top: 12vh;
-        left: 50%;
-        transform: translateX(-50%);
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(129, 140, 248, 0.15) 60%, transparent 80%);
-        animation: floatOrb3 8s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatOrb1 {
-        0% { transform: translate(0, 0) scale(0.95); }
-        100% { transform: translate(-30px, -25px) scale(1.08); }
-    }
-    @keyframes floatOrb2 {
-        0% { transform: translate(0, 0) scale(1.05); }
-        100% { transform: translate(35px, -30px) scale(0.92); }
-    }
-    @keyframes floatOrb3 {
-        0% { transform: translateX(-50%) translateY(0) scale(0.9); }
-        100% { transform: translateX(-45%) translateY(20px) scale(1.1); }
-    }
-
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(16px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes gradientFlow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    @keyframes pulseDot {
-        0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-        50% { transform: scale(1.15); opacity: 0.85; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-    }
-
-    .block-container {
-        position: relative;
-        z-index: 2;
-        padding-top: 6.2rem !important;
-        padding-bottom: 5.5rem !important;
-        max-width: 760px !important;
-    }
-
-    /* Fixed Header Anchored to Top Corners */
-    .fixed-top-nav {
-        position: fixed;
-        top: 20px;
-        left: 28px;
-        right: 28px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 99999;
-        pointer-events: none;
-    }
-
-    .pointer-events-auto {
-        pointer-events: auto;
-    }
-
-    .logo-badge {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        border: 1.5px solid var(--brand-border);
-        border-radius: 999px;
-        padding: 6px 16px 6px 12px;
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--text-color);
-        background: var(--input-bg);
-        backdrop-filter: blur(12px);
-        box-shadow: 3px 3px 0px #6366f1;
-        transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
-        cursor: pointer;
-    }
-    .logo-badge:hover {
-        transform: translate(-2px, -2px) scale(1.03);
-        box-shadow: 5px 5px 0px #ec4899;
-    }
-    .logo-icon-circle {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #6366f1, #ec4899);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-    }
-
-    /* Button Styling */
-    div.stButton > button {
-        background: var(--pill-bg) !important;
-        backdrop-filter: blur(12px) !important;
-        color: var(--text-color) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: 999px !important;
-        padding: 0.42rem 1.05rem !important;
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
-        transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-    }
-    div.stButton > button:hover {
-        transform: translateY(-3px) scale(1.02) !important;
-        box-shadow: 0 10px 24px rgba(99, 102, 241, 0.22) !important;
-        border-color: #818cf8 !important;
-    }
-
-    /* Hero Badge, Animated Gradient Heading & Subtitle */
-    .hero-badge-wrap {
-        display: flex;
-        justify-content: center;
-        margin-top: 5vh;
-        margin-bottom: 0.8rem;
-        animation: fadeUp 0.55s ease-out both;
-    }
-    .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px 14px;
-        border-radius: 999px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-        background: rgba(99, 102, 241, 0.12);
-        border: 1px solid rgba(129, 140, 248, 0.35);
-        color: #818cf8;
-    }
-    .live-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #10b981;
-        animation: pulseDot 2s infinite;
-    }
-
-    .hero-heading {
-        font-family: 'Instrument Serif', Georgia, serif;
-        font-size: clamp(2.4rem, 9vw, 3.8rem);
-        line-height: 1.08;
-        font-weight: 400;
-        color: var(--text-color);
-        text-align: center;
-        margin-bottom: 0.65rem;
-        letter-spacing: -0.02em;
-        animation: fadeUp 0.65s ease-out 0.08s both;
-    }
-    .gradient-word {
-        font-style: italic;
-        background: linear-gradient(90deg, #6366f1, #ec4899, #f59e0b, #6366f1);
-        background-size: 250% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: gradientFlow 5s linear infinite;
-        padding-right: 4px;
-    }
-    .hero-subtitle {
-        text-align: center;
-        font-size: 0.96rem;
-        color: var(--muted-text);
-        margin-bottom: 1.8rem;
-        animation: fadeUp 0.7s ease-out 0.14s both;
-    }
-
-    /* Chat Input: Interactive Glowing Pill */
-    [data-testid="stChatInput"] {
-        background: var(--input-bg) !important;
-        backdrop-filter: blur(16px) !important;
-        border-radius: 999px !important;
-        border: 1.5px solid var(--input-border) !important;
-        box-shadow: 0 14px 36px rgba(99, 102, 241, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-        padding: 6px 58px 6px 22px !important;
-        position: relative !important;
-        transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        animation: fadeUp 0.75s ease-out 0.18s backwards;
-    }
-    [data-testid="stChatInput"]:hover {
-        border-color: rgba(168, 85, 247, 0.5) !important;
-        box-shadow: 0 16px 40px rgba(168, 85, 247, 0.16) !important;
-    }
-    [data-testid="stChatInput"]:focus-within {
-        border-color: #818cf8 !important;
-        box-shadow: 0 18px 44px rgba(99, 102, 241, 0.22), 0 0 0 4px rgba(129, 140, 248, 0.18) !important;
-        transform: translateY(-2px);
-    }
-    [data-testid="stChatInput"] > div,
-    [data-testid="stChatInput"] [data-baseweb="textarea"],
-    [data-testid="stChatInput"] [data-baseweb="base-input"] {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 999px !important;
-    }
-    [data-testid="stChatInput"] textarea {
-        background: transparent !important;
-        color: var(--text-color) !important;
-        font-size: 1rem !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        padding: 0.65rem 0 !important;
-        caret-color: #ec4899;
-    }
-    [data-testid="stChatInput"] textarea::placeholder {
-        color: var(--placeholder-color) !important;
-        opacity: 1 !important;
-    }
-    [data-testid="stChatInputSubmitButton"] {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%) !important;
-        color: #ffffff !important;
-        border: none !important;
-        border-radius: 50% !important;
-        width: 40px !important;
-        height: 40px !important;
-        padding: 0 !important;
-        position: absolute !important;
-        top: 50% !important;
-        bottom: auto !important;
-        right: 8px !important;
-        transform: translateY(-50%);
-        box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4) !important;
-        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-    }
-    [data-testid="stChatInputSubmitButton"]:hover {
-        transform: translateY(-50%) scale(1.12) rotate(6deg) !important;
-        box-shadow: 0 6px 20px rgba(236, 72, 153, 0.55) !important;
-    }
-    [data-testid="stChatInputSubmitButton"] svg {
-        fill: #ffffff !important;
-    }
-
-    /* Chat Messages */
-    [data-testid="stChatMessage"] {
-        background: var(--card-bg) !important;
-        backdrop-filter: blur(16px) !important;
-        border: 1px solid var(--card-border) !important;
-        border-radius: 20px !important;
-        padding: 16px 20px !important;
-        margin-bottom: 14px !important;
-        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.05) !important;
-        color: var(--text-color) !important;
-        animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    [data-testid="stChatMessage"]:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 30px rgba(99, 102, 241, 0.08) !important;
-    }
-    [data-testid="stChatMessage"] p, [data-testid="stChatMessage"] li, [data-testid="stChatMessage"] span {
-        color: var(--text-color) !important;
-    }
-
-    div.stButton > button p {
-        font-size: inherit !important;
-        line-height: 1.25 !important;
-        margin: 0 !important;
-    }
-
-    /* Quick-action chips */
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) {
-        flex-wrap: nowrap !important;
-        justify-content: safe center;
-        gap: 0.65rem !important;
-        overflow-x: auto;
-        padding: 14px 6px 30px 6px;
-        scrollbar-width: none;
-        animation: fadeUp 0.8s ease-out 0.24s backwards;
-    }
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker)::-webkit-scrollbar { display: none; }
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) > div {
-        flex: 0 0 auto !important;
-        width: auto !important;
-        min-width: 0 !important;
-    }
-    div[data-testid="stElementContainer"]:has(.qa-marker),
-    div.element-container:has(.qa-marker) {
-        display: none !important;
-    }
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {
-        background: var(--pill-bg) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 1px solid var(--input-border) !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
-        color: var(--text-color) !important;
-        padding: 0.5rem 1.15rem !important;
-        font-size: 0.85rem !important;
-        font-weight: 600 !important;
-        white-space: nowrap !important;
-        transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-    }
-    div[data-testid="stHorizontalBlock"]:has(.qa-marker) button:hover {
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(236, 72, 153, 0.14)) !important;
-        border-color: #a855f7 !important;
-        box-shadow: 0 10px 22px rgba(168, 85, 247, 0.18) !important;
-        transform: translateY(-3px) scale(1.03) !important;
-    }
-
-    /* Top-right button bar */
-    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {
-        position: fixed !important;
-        top: 20px;
-        right: 28px;
-        width: 270px !important;
-        max-width: calc(100vw - 200px);
-        gap: 10px !important;
-        flex-wrap: nowrap !important;
-        z-index: 99999;
-    }
-    div[data-testid="stHorizontalBlock"]:has(.topbar-marker) > div {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-        width: auto !important;
-    }
-    div[data-testid="stElementContainer"]:has(.topbar-marker),
-    div.element-container:has(.topbar-marker) {
-        display: none !important;
-    }
-
-    [data-testid="stBottom"], [data-testid="stBottom"] > div {
-        background: transparent !important;
-    }
-
-    /* Disclaimer & AI Notice */
-    .notice-short { display: none; }
-    .disclaimer-footer {
-        position: fixed;
-        bottom: 10px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        font-size: 0.73rem;
-        color: var(--muted-text);
-        z-index: 10;
-        pointer-events: none;
-        background: var(--footer-bg);
-        backdrop-filter: blur(8px);
-        padding: 5px;
-    }
-
-    /* Phones */
-    @media (max-width: 640px) {
-        .orb { filter: blur(40px); animation: none; }
-        .block-container {
-            padding-top: 4.8rem !important;
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            padding-bottom: 6rem !important;
-        }
-        .fixed-top-nav { top: 14px; left: 12px; right: 12px; }
-        .logo-badge {
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            box-shadow: 2px 2px 0px #6366f1;
-        }
-        .logo-icon-circle { display: none; }
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) {
-            top: 14px;
-            right: 12px;
-            width: 220px !important;
-            max-width: none;
-            gap: 6px !important;
-        }
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button {
-            padding: 0.3rem 0.3rem !important;
-            font-size: 0.72rem !important;
-            white-space: nowrap !important;
-        }
-        .hero-badge-wrap { margin-top: 1.5vh; }
-        .hero-heading { margin-bottom: 0.5rem; }
-        .hero-subtitle { font-size: 0.85rem; margin-bottom: 1.2rem; }
-        div[data-testid="stHorizontalBlock"]:has(.qa-marker) button {
-            font-size: 0.8rem !important;
-            padding: 0.42rem 0.95rem !important;
-        }
-        [data-testid="stChatInput"] { padding: 4px 52px 4px 16px !important; }
-        [data-testid="stChatInput"] textarea { font-size: 0.92rem !important; }
-        [data-testid="stChatMessage"] { padding: 12px 14px !important; }
-        .notice-full { display: none; }
-        .notice-short { display: inline; }
-        .disclaimer-footer {
-            bottom: 6px;
-            font-size: 0.62rem;
-            padding: 4px 76px 4px 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    }
-    @media (max-width: 380px) {
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) { width: 200px !important; }
-        div[data-testid="stHorizontalBlock"]:has(.topbar-marker) button { font-size: 0.66rem !important; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation: none !important; transition: none !important; }
-    }
-</style>
-
-<div class="aurora-container">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-</div>
-<div class="disclaimer-footer">
-    <span class="notice-full">⚡ AI Notice: Content is AI-generated and can contain mistakes. Not professional business/legal advice. Human verification required.</span>
-    <span class="notice-short">⚡ AI-generated, may contain mistakes. Verify before use.</span>
-</div>
-""", unsafe_allow_html=True)
-
-# 4. Logo on Top-Left
-st.markdown("""
-<div class="fixed-top-nav">
-    <div class="pointer-events-auto">
-        <div class="logo-badge">
-            <span class="logo-icon-circle">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </span>
-            StartupMateAI
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# 5. Developer Details Dialog (requires streamlit>=1.37)
-@st.dialog("Developer Details")
-def show_developer():
-    st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap');
-div[role="dialog"] {{
-    background: {bg_color} !important;
-    border-radius: 26px !important;
-    border: 1px solid {card_border} !important;
-    box-shadow: 0 24px 60px rgba(99, 102, 241, 0.25) !important;
-}}
-div[role="dialog"] button[aria-label="Close"],
-div[role="dialog"] button[aria-label="Close"] svg {{
-    color: {text_color} !important;
-}}
-div[role="dialog"] h2 {{
-    font-family: 'Patrick Hand SC', cursive !important;
-    font-size: 1.55rem !important;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: {text_color} !important;
-    text-align: center;
-    width: fit-content;
-    margin: 0 auto !important;
-    padding: 0.35rem 1.6rem !important;
-    border: 3px solid transparent;
-    border-radius: 999px;
-    background:
-        linear-gradient({bg_color}, {bg_color}) padding-box,
-        linear-gradient(90deg, #6366f1, #ec4899, #f59e0b) border-box;
-}}
-.dev-card {{
-    font-family: 'Patrick Hand SC', cursive;
-    color: {text_color} !important;
-    background: {bg_color};
-    border-radius: 18px;
-    padding: 0.6rem 0.4rem 0.3rem 0.4rem;
-    text-align: center;
-}}
-.dev-card div, .dev-card span, .dev-card a {{
-    color: {text_color};
-}}
-.dev-name {{
-    font-size: 1.65rem;
-    letter-spacing: 0.05em;
-    line-height: 1.45;
-}}
-.dev-info {{
-    font-size: 1.25rem;
-    letter-spacing: 0.06em;
-    line-height: 1.55;
-    margin-top: 0.6rem;
-    color: {muted_text} !important;
-}}
-.dev-more {{
-    text-align: center;
-    margin: 1.4rem 0 1.2rem 0;
-}}
-.dev-more summary {{
-    display: inline-block;
-    list-style: none;
-    cursor: pointer;
-    background: linear-gradient(135deg, #6366f1, #ec4899);
-    color: #ffffff !important;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.5rem 1.4rem;
-    border-radius: 999px;
-    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
-}}
-.dev-more summary::-webkit-details-marker {{ display: none; }}
-.dev-extra {{
-    font-size: 1.1rem;
-    letter-spacing: 0.04em;
-    margin-top: 0.9rem;
-}}
-.dev-social {{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 0.6rem;
-}}
-.dev-social a {{
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: {text_color} !important;
-    background: {pill_bg};
-    border: 1px solid {card_border};
-    padding: 8px 14px;
-    border-radius: 999px;
-    text-decoration: none !important;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-weight: 600;
-    font-size: 0.95rem;
-}}
-</style>
-<div class="dev-card">
-<div class="dev-name">Kamrul Hasan Maruf</div>
-<div class="dev-name">(Maruf MD Kamrul Hasan)</div>
-<div class="dev-info">2617308<br>Department of Artificial Intelligence<br>Kyungdong University Global<br>South Korea</div>
-<details class="dev-more"><summary>✨ More Info</summary><div class="dev-extra">Built with Streamlit &amp; Groq AI for Topic 84.</div></details>
-<div class="dev-social">
-<a href="https://github.com/iamkhm7" target="_blank">GitHub</a>
-<a href="https://instagram.com/_iamkhm_" target="_blank">Instagram</a>
-<a href="https://facebook.com/iamkhm" target="_blank">Facebook</a>
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# 6. Top-Right Buttons
-btn_col1, btn_col2 = st.columns(2)
-
-with btn_col1:
-    st.markdown('<div class="topbar-marker"></div>', unsafe_allow_html=True)
-    toggle_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
-    if st.button(toggle_label, use_container_width=True, key="theme_toggle"):
-        st.session_state.dark_mode = not st.session_state.dark_mode
-        st.rerun()
-
-with btn_col2:
-    if st.button("👨‍💻 Developer", use_container_width=True, key="dev_btn"):
-        show_developer()
-
-# 7. Groq Connection & System Prompt
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
-MODEL = "openai/gpt-oss-20b"
-
 SYSTEM_PROMPT = (
-    "You are StartupMateAI, an expert startup co-founder, business strategist, and venture mentor. "
-    "Your objective is to help founders brainstorm ideas, test market viability, construct SWOT analyses, "
-    "and build structured execution roadmaps. "
+    "You are StartupMateAI, an expert startup co-founder, business strategist, "
+    "and venture mentor. Help founders brainstorm ideas, test market viability, "
+    "construct SWOT analyses, and build structured execution roadmaps. "
+    "Be objective, constructive, practical, and realistic. Use clear headings "
+    "and actionable steps when useful. Do not pretend assumptions are verified facts. "
     "SAFETY & DISCLAIMER RULES:\n"
-    "1. Always remind users that financial, legal, and tax projections are simulated and require professional verification.\n"
-    "2. If a user mentions self-harm, danger, illegal activity, or severe distress, immediately stop business advice, express care, and instruct them to contact emergency services or trusted authorities.\n"
-    "3. Be objective, constructive, and realistic in startup critique."
+    "1. Remind users that financial, legal, and tax projections are simulated "
+    "and require professional verification.\n"
+    "2. If a user mentions self-harm, danger, illegal activity, or severe distress, "
+    "stop business advice, respond supportively, and direct them to emergency "
+    "services or trusted authorities as appropriate.\n"
+    "3. Never guarantee business success, funding, revenue, or market demand."
 )
 
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
 
-user_prompt = None
+if "pending_prompt" not in st.session_state:
+    st.session_state.pending_prompt = None
 
-# 8. Landing View
-if len(st.session_state.messages) == 1:
-    st.markdown("""
-    <div class="hero-badge-wrap">
-        <div class="hero-badge"><span class="live-dot"></span> AI Co-Founder • Idea to MVP</div>
-    </div>
-    <div class="hero-heading">Let's create a <span class="gradient-word">startup.</span></div>
-    <div class="hero-subtitle">Brainstorm high-potential ventures, validate with SWOT, and map your 30-day launch.</div>
-    """, unsafe_allow_html=True)
-
-    inline_input = st.chat_input("Pitch your idea or ask anything...")
-    if inline_input:
-        user_prompt = inline_input
-
-    st.write("")
-    qa = st.columns(4)
-    with qa[0]:
-        st.markdown('<div class="qa-marker"></div>', unsafe_allow_html=True)
-
-    if qa[0].button("💡 Brainstorm Idea", key="qa_brainstorm"):
-        user_prompt = "Help me brainstorm a high-potential SaaS startup idea for university students."
-    if qa[1].button("🔍 Validate with SWOT", key="qa_swot"):
-        user_prompt = "Conduct a rigorous SWOT analysis for an AI-powered personal productivity app."
-    if qa[2].button("🗺️ 30-Day Roadmap", key="qa_roadmap"):
-        user_prompt = "Create a lean 30-day MVP launch roadmap for a new startup concept."
-    if qa[3].button("📊 Pitch Deck", key="qa_pitch"):
-        user_prompt = "Give me a 10-slide seed pitch deck structure for investors."
-
-# 9. Active Chat View
+# ------------------------- Theme -------------------------
+if st.session_state.dark_mode:
+    theme = {
+        "bg": "#11111f",
+        "surface": "rgba(31, 30, 49, .92)",
+        "surface_soft": "rgba(39, 37, 60, .82)",
+        "text": "#f7f5ff",
+        "muted": "#aaa7c1",
+        "border": "rgba(177, 164, 226, .18)",
+        "input": "#211f35",
+        "footer": "rgba(17, 17, 31, .92)",
+        "grid": "rgba(255,255,255,.035)",
+        "shadow": "rgba(0,0,0,.24)",
+    }
 else:
-    _, top_c2 = st.columns([5, 1])
-    with top_c2:
-        if st.button("↺ New Pitch", use_container_width=True, key="new_pitch"):
+    theme = {
+        "bg": "#faf9ff",
+        "surface": "rgba(255,255,255,.88)",
+        "surface_soft": "rgba(255,255,255,.72)",
+        "text": "#19172b",
+        "muted": "#77758d",
+        "border": "rgba(111, 91, 166, .14)",
+        "input": "#ffffff",
+        "footer": "rgba(250,249,255,.9)",
+        "grid": "rgba(34,24,70,.045)",
+        "shadow": "rgba(76,55,132,.09)",
+    }
+
+st.markdown(
+    f"""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+    :root {{
+        color-scheme: {"dark" if st.session_state.dark_mode else "light"};
+        --bg: {theme["bg"]};
+        --surface: {theme["surface"]};
+        --surface-soft: {theme["surface_soft"]};
+        --text: {theme["text"]};
+        --muted: {theme["muted"]};
+        --border: {theme["border"]};
+        --input: {theme["input"]};
+        --shadow: {theme["shadow"]};
+    }}
+
+    html, body, [data-testid="stAppViewContainer"] {{
+        background: var(--bg) !important;
+        color: var(--text) !important;
+        font-family: 'DM Sans', sans-serif !important;
+    }}
+    [data-testid="stAppViewContainer"] {{
+        background-image:
+          radial-gradient(ellipse at 17% 22%, rgba(173,145,255,.19), transparent 32%),
+          radial-gradient(ellipse at 83% 30%, rgba(255,167,190,.17), transparent 31%),
+          radial-gradient(var(--grid) 1px, transparent 1px) !important;
+        background-size: auto, auto, 25px 25px !important;
+    }}
+    [data-testid="stHeader"], #MainMenu, footer {{visibility:hidden;}}
+    [data-testid="stToolbar"] {{display:none;}}
+    .block-container {{
+        max-width: 1120px !important;
+        padding-top: 1.2rem !important;
+        padding-bottom: 5rem !important;
+    }}
+    p, li, label, .stMarkdown {{ color: var(--text); }}
+    .brand {{
+        display:flex; align-items:center; gap:10px;
+        color:var(--text); font-weight:800; letter-spacing:-.5px;
+        font-size:17px; padding:8px 0;
+    }}
+    .brand-icon {{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:36px; height:36px; border-radius:13px; color:white;
+        background:linear-gradient(140deg,#7955ef,#bd55d7);
+        box-shadow:0 7px 18px rgba(137,91,230,.28); font-size:18px;
+    }}
+    .topline {{
+        border-bottom:1px solid var(--border);
+        padding-bottom:13px; margin-bottom:20px;
+    }}
+    .hero {{
+        text-align:center; padding:50px 10px 25px;
+    }}
+    .eyebrow {{
+        display:inline-flex; align-items:center; gap:8px;
+        padding:8px 14px; border-radius:999px;
+        color:#8069dc; background:rgba(133,104,232,.10);
+        border:1px solid rgba(133,104,232,.22);
+        font-size:11px; font-weight:800; letter-spacing:.6px;
+    }}
+    .live-dot {{
+        width:7px; height:7px; display:inline-block;
+        border-radius:50%; background:#32c99a;
+        box-shadow:0 0 0 4px rgba(50,201,154,.13);
+    }}
+    .hero h1 {{
+        font-family:'Playfair Display', Georgia, serif;
+        color:var(--text); font-size:clamp(43px,6.5vw,72px);
+        line-height:1.08; letter-spacing:-1.9px;
+        font-weight:500; margin:22px 0 12px;
+    }}
+    .hero h1 em {{
+        font-weight:500; background:linear-gradient(100deg,#ff8b55,#a16be8);
+        -webkit-background-clip:text; background-clip:text;
+        -webkit-text-fill-color:transparent;
+    }}
+    .hero-sub {{
+        color:var(--muted); font-size:15px; line-height:1.75;
+        max-width:690px; margin:0 auto;
+    }}
+    .hero-joke {{
+        color:var(--muted); font-size:11px; margin-top:11px;
+    }}
+    .section-label {{
+        color:#9075e5; font-size:10px; font-weight:800;
+        letter-spacing:1.6px; text-transform:uppercase;
+        margin:23px 0 8px;
+    }}
+    .section-title {{
+        color:var(--text); font-family:'Playfair Display',serif;
+        font-size:29px; font-weight:500; margin:0 0 5px;
+    }}
+    .section-copy {{color:var(--muted);font-size:12px;line-height:1.6;}}
+    .tool-card {{
+        background:var(--surface); border:1px solid var(--border);
+        border-radius:19px; padding:17px 16px 13px;
+        min-height:135px; box-shadow:0 9px 28px var(--shadow);
+        margin-bottom:8px; backdrop-filter:blur(12px);
+    }}
+    .tool-icon {{
+        width:37px;height:37px;border-radius:12px;
+        display:flex;align-items:center;justify-content:center;
+        background:rgba(133,104,232,.12);font-size:18px;margin-bottom:12px;
+    }}
+    .tool-title {{font-size:13px;font-weight:800;color:var(--text);margin-bottom:5px;}}
+    .tool-copy {{font-size:11px;line-height:1.55;color:var(--muted);}}
+    div.stButton > button {{
+        border:1px solid var(--border) !important;
+        border-radius:999px !important;
+        background:var(--surface) !important;
+        color:var(--text) !important;
+        font-family:'DM Sans',sans-serif !important;
+        font-weight:700 !important; font-size:12px !important;
+        min-height:39px !important;
+        box-shadow:0 5px 15px var(--shadow) !important;
+        transition:all .2s ease !important;
+    }}
+    div.stButton > button:hover {{
+        border-color:#a58af2 !important;
+        transform:translateY(-2px);
+        box-shadow:0 9px 22px rgba(129,91,225,.16) !important;
+    }}
+    div.stButton > button[kind="primary"] {{
+        background:linear-gradient(110deg,#8058ef,#bd4dd5) !important;
+        color:white !important; border:0 !important;
+    }}
+    [data-testid="stChatInput"] {{
+        background:var(--input) !important;
+        border:1px solid rgba(137,111,220,.28) !important;
+        border-radius:22px !important;
+        box-shadow:0 14px 38px var(--shadow) !important;
+        padding:7px 12px !important;
+    }}
+    [data-testid="stChatInput"] textarea {{
+        color:var(--text) !important;
+        font-family:'DM Sans',sans-serif !important;
+        font-size:14px !important;
+    }}
+    [data-testid="stChatInput"] textarea::placeholder {{color:var(--muted)!important;}}
+    [data-testid="stChatInputSubmitButton"] {{
+        background:linear-gradient(135deg,#8058ef,#c34fd1)!important;
+        color:white!important;border-radius:50%!important;
+    }}
+    [data-testid="stChatMessage"] {{
+        background:var(--surface)!important;
+        border:1px solid var(--border)!important;
+        border-radius:18px!important;
+        box-shadow:0 8px 25px var(--shadow)!important;
+        padding:14px 18px!important;
+    }}
+    [data-testid="stChatMessage"] p,
+    [data-testid="stChatMessage"] li {{color:var(--text)!important;}}
+    .workspace-note {{
+        border:1px solid var(--border); border-radius:18px;
+        padding:16px 18px; background:var(--surface-soft);
+        color:var(--muted); font-size:12px; line-height:1.7;
+        margin:12px 0 18px;
+    }}
+    .disclaimer {{
+        text-align:center; color:var(--muted); font-size:10px;
+        border-top:1px solid var(--border); padding-top:15px; margin-top:28px;
+    }}
+    @media(max-width:700px) {{
+        .block-container {{padding: .6rem 1rem 4rem !important;}}
+        .hero {{padding:36px 0 18px;}}
+        .hero h1 {{letter-spacing:-1px;}}
+        .hero-sub {{font-size:13px;}}
+        .tool-card {{min-height:145px;padding:14px 12px;}}
+        .section-title {{font-size:25px;}}
+    }}
+    @media(prefers-reduced-motion:reduce) {{
+        *,*::before,*::after {{animation:none!important;transition:none!important;}}
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ------------------------- Header -------------------------
+header_left, header_right = st.columns([5, 2], vertical_alignment="center")
+with header_left:
+    st.markdown(
+        '<div class="brand"><span class="brand-icon">✦</span>'
+        'StartupMate<span style="color:#956de8">AI</span></div>',
+        unsafe_allow_html=True,
+    )
+with header_right:
+    h1, h2 = st.columns(2)
+    with h1:
+        theme_label = "☀️ Light" if st.session_state.dark_mode else "🌙 Dark"
+        if st.button(theme_label, use_container_width=True, key="theme_toggle"):
+            st.session_state.dark_mode = not st.session_state.dark_mode
+            st.rerun()
+
+    @st.dialog("A little about the builder")
+    def show_developer():
+        st.markdown(
+            """
+            <div style="text-align:center;line-height:1.9">
+              <div style="font-size:25px;font-weight:800">Kamrul Hasan Maruf</div>
+              <div style="color:#9876e8;font-weight:600">AI Student · StartupMate AI</div>
+              <p>Department of Artificial Intelligence<br>
+              Kyungdong University Global · South Korea</p>
+              <p><b>Built with:</b> Streamlit + Groq AI</p>
+              <p style="font-size:12px">Making startup planning less intimidating—and slightly less boring.</p>
+              <a href="https://github.com/iamkhm7" target="_blank">GitHub profile ↗</a>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with h2:
+        if st.button("👨‍💻 Developer", use_container_width=True, key="developer_btn"):
+            show_developer()
+
+st.markdown('<div class="topline"></div>', unsafe_allow_html=True)
+
+# ------------------------- Groq client -------------------------
+try:
+    client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+except Exception:
+    client = None
+
+MODEL = "openai/gpt-oss-20b"
+
+QUICK_ACTIONS = [
+    {
+        "key": "brainstorm",
+        "icon": "💡",
+        "title": "Idea Brainstormer",
+        "copy": "Turn a half-formed thought into a startup concept.",
+        "button": "Brainstorm an idea",
+        "prompt": "Help me brainstorm a high-potential startup idea. Ask concise clarifying questions if needed, then outline the problem, target users, solution, differentiator, and MVP.",
+    },
+    {
+        "key": "swot",
+        "icon": "🔎",
+        "title": "SWOT Validator",
+        "copy": "Find the strengths, weaknesses, opportunities and threats.",
+        "button": "Run a SWOT analysis",
+        "prompt": "Help me validate my startup idea with a rigorous SWOT analysis. If I have not provided an idea, ask me for it first. Separate known facts from assumptions.",
+    },
+    {
+        "key": "roadmap",
+        "icon": "🗺️",
+        "title": "30-Day Roadmap",
+        "copy": "Break the launch into small, achievable milestones.",
+        "button": "Build a 30-day roadmap",
+        "prompt": "Create a practical 30-day startup MVP roadmap with weekly milestones, daily or grouped tasks, deliverables, and validation checkpoints. Ask for the startup idea if it is missing.",
+    },
+    {
+        "key": "pitch",
+        "icon": "📊",
+        "title": "Pitch Deck Builder",
+        "copy": "Shape your idea into a clear investor presentation.",
+        "button": "Create a pitch outline",
+        "prompt": "Create a clear 10-slide startup pitch deck outline covering problem, solution, product, market, business model, traction or validation, competition, go-to-market, team, and ask. Ask for the startup idea if missing.",
+    },
+]
+
+def queue_prompt(prompt: str):
+    st.session_state.pending_prompt = prompt
+
+# ------------------------- Landing / chat -------------------------
+is_landing = len(st.session_state.messages) == 1
+
+if is_landing:
+    st.markdown(
+        """
+        <section class="hero">
+          <div class="eyebrow"><span class="live-dot"></span> YOUR AI CO-FOUNDER · IDEA TO MVP</div>
+          <h1>Let's build your <em>big idea.</em></h1>
+          <div class="hero-sub">
+            Brainstorm, validate and plan your next move with an AI co-founder
+            that works for equity-free enthusiasm.
+          </div>
+          <div class="hero-joke">You bring the idea. We'll bring the spreadsheets. Nobody has to wear a hoodie.</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        '<div class="workspace-note">✦ <b>Start anywhere:</b> pitch a rough idea, describe a problem, '
+        'or pick one of the tools below. “I have no idea yet” is also a valid starting point.</div>',
+        unsafe_allow_html=True,
+    )
+
+    cols = st.columns(4, gap="small")
+    for col, action in zip(cols, QUICK_ACTIONS):
+        with col:
+            st.markdown(
+                f"""
+                <div class="tool-card">
+                  <div class="tool-icon">{action["icon"]}</div>
+                  <div class="tool-title">{action["title"]}</div>
+                  <div class="tool-copy">{action["copy"]}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            if st.button(action["button"], key=f'quick_{action["key"]}', use_container_width=True):
+                queue_prompt(action["prompt"])
+
+    st.markdown('<div style="height:12px"></div>', unsafe_allow_html=True)
+    user_input = st.chat_input("Pitch your idea or ask your co-founder anything…")
+    if user_input:
+        queue_prompt(user_input)
+
+else:
+    chat_header_left, chat_header_right = st.columns([5, 1])
+    with chat_header_left:
+        st.markdown('<div class="section-label">YOUR STARTUP WORKSPACE</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">The idea is in motion.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-copy">Keep refining, questioning and building. Progress looks good on you.</div>', unsafe_allow_html=True)
+    with chat_header_right:
+        if st.button("↺ New chat", use_container_width=True, key="new_chat"):
             st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+            st.session_state.pending_prompt = None
             st.rerun()
 
     for msg in st.session_state.messages:
@@ -736,32 +395,58 @@ else:
             with st.chat_message(msg["role"], avatar=avatar):
                 st.markdown(msg["content"])
 
-    docked_input = st.chat_input("Ask your co-founder anything...")
-    if docked_input:
-        user_prompt = docked_input
+    user_input = st.chat_input("Ask your co-founder anything…")
+    if user_input:
+        queue_prompt(user_input)
 
-# 10. Response Generation
-if user_prompt:
-    st.session_state.messages.append({"role": "user", "content": user_prompt})
+# ------------------------- Generate response -------------------------
+prompt = st.session_state.pending_prompt
+if prompt:
+    st.session_state.pending_prompt = None
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
     with st.chat_message("user", avatar="🧑‍💻"):
-        st.markdown(user_prompt)
+        st.markdown(prompt)
 
-    reply = None
     with st.chat_message("assistant", avatar="🚀"):
-        try:
-            stream = client.chat.completions.create(
-                model=MODEL,
-                messages=st.session_state.messages,
-                stream=True,
+        if client is None:
+            st.error(
+                "Groq is not configured. Add GROQ_API_KEY to your Streamlit secrets "
+                "before using AI generation."
             )
-            reply = st.write_stream(
-                chunk.choices[0].delta.content or "" for chunk in stream
-            )
-        except Exception as e:
             st.session_state.messages.pop()
-            st.error(f"API Error: {e}")
+        else:
+            try:
+                stream = client.chat.completions.create(
+                    model=MODEL,
+                    messages=st.session_state.messages,
+                    stream=True,
+                )
+                reply = st.write_stream(
+                    chunk.choices[0].delta.content or "" for chunk in stream
+                )
+                if reply:
+                    st.session_state.messages.append(
+                        {"role": "assistant", "content": reply}
+                    )
+                else:
+                    st.warning("The model returned an empty response. Please try again.")
+                    st.session_state.messages.pop()
+            except Exception as exc:
+                st.session_state.messages.pop()
+                st.error(f"AI request failed: {exc}")
+    st.rerun()
 
-    if reply:
-        st.session_state.messages.append({"role": "assistant", "content": reply})
-        st.rerun()
+# ------------------------- Footer -------------------------
+st.markdown(
+    """
+    <div class="disclaimer">
+      ⚡ AI-generated content can contain mistakes. Financial, legal and tax information
+      is not professional advice. Verify important decisions with qualified professionals.
+      <br><br>
+      <span style="opacity:.8">StartupMate AI · Built for bold ideas and realistic to-do lists.</span>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
