@@ -1,3 +1,5 @@
+import random
+
 import streamlit as st
 from groq import Groq
 
@@ -35,6 +37,9 @@ if "messages" not in st.session_state:
 
 if "pending_prompt" not in st.session_state:
     st.session_state.pending_prompt = None
+
+if "page" not in st.session_state:
+    st.session_state.page = "home"  # "home" first, then "app"
 
 # ------------------------- Styles -------------------------
 st.markdown(
@@ -125,12 +130,12 @@ st.markdown(
     div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:first-child {
         flex: 1 1 auto !important; min-width: 0 !important; width: auto !important;
     }
-    div[data-testid="stHorizontalBlock"]:has(.brand) > div:last-child,
-    div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:last-child {
+    div[data-testid="stHorizontalBlock"]:has(.brand) > div:not(:first-child),
+    div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:not(:first-child) {
         flex: 0 0 auto !important; min-width: 0 !important; width: auto !important;
     }
-    div[data-testid="stHorizontalBlock"]:has(.brand) > div:last-child div.stButton,
-    div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:last-child div.stButton {
+    div[data-testid="stHorizontalBlock"]:has(.brand) > div:not(:first-child) div.stButton,
+    div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:not(:first-child) div.stButton {
         display: flex; justify-content: flex-end;
     }
 
@@ -323,6 +328,112 @@ st.markdown(
     [data-testid="stModal"] a.dev-link,
     div[role="dialog"] a.dev-link { color: #ffffff !important; }
 
+    /* ---------- Homepage ---------- */
+    .rotator {
+        display: inline-flex; align-items: center; gap: .55rem;
+        margin-top: 20px; padding: .6rem 1.1rem; border-radius: 999px;
+        background: var(--surface); border: 1px solid var(--border);
+        box-shadow: 0 8px 22px var(--shadow); backdrop-filter: blur(10px);
+        font-size: 14px; font-weight: 700; color: var(--text);
+    }
+    .rot-label { color: var(--muted); font-weight: 600; }
+    .rot-window { display: inline-block; height: 1.5em; width: 15em; overflow: hidden; text-align: left; vertical-align: middle; }
+    .rot-list { display: block; animation: rotateWords 11s cubic-bezier(.65, 0, .35, 1) infinite; }
+    .rot-list span { display: block; height: 1.5em; line-height: 1.5em; white-space: nowrap; color: #8058ef; }
+    @keyframes rotateWords {
+        0%, 20%  { transform: translateY(0); }
+        25%, 45% { transform: translateY(-20%); }
+        50%, 70% { transform: translateY(-40%); }
+        75%, 95% { transform: translateY(-60%); }
+        100%     { transform: translateY(-80%); }
+    }
+    @keyframes popIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CTA rows (the buttons are real Streamlit buttons) */
+    div[data-testid="stHorizontalBlock"]:has(.cta-marker) {
+        flex-wrap: nowrap !important; justify-content: center; gap: .7rem !important;
+    }
+    div[data-testid="stHorizontalBlock"]:has(.cta-marker) > div {
+        flex: 0 0 auto !important; width: auto !important; min-width: 0 !important;
+    }
+    div[data-testid="stElementContainer"]:has(.cta-marker),
+    div.element-container:has(.cta-marker) { display: none !important; }
+    div[data-testid="stHorizontalBlock"]:has(.cta-marker) button {
+        min-height: 48px !important; padding: .4rem 1.4rem !important; font-size: 14px !important;
+    }
+    div.stButton > button[kind="primary"],
+    div.stButton > button[data-testid="stBaseButton-primary"] {
+        background: linear-gradient(110deg, #8058ef, #bd4dd5) !important;
+        color: #ffffff !important; border: 0 !important;
+        box-shadow: 0 10px 26px rgba(137, 91, 230, .38) !important;
+    }
+    div.stButton > button[kind="primary"]:hover,
+    div.stButton > button[data-testid="stBaseButton-primary"]:hover {
+        box-shadow: 0 14px 32px rgba(189, 77, 213, .45) !important;
+    }
+    .fineprint { text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 6px; line-height: 1.6; }
+
+    /* Chat preview card */
+    .peek {
+        max-width: 560px; margin: 28px auto 0; text-align: left; overflow: hidden;
+        border-radius: 22px; background: var(--surface); border: 1px solid var(--border);
+        box-shadow: 0 18px 46px var(--shadow); backdrop-filter: blur(14px);
+    }
+    .peek-bar {
+        display: flex; align-items: center; gap: 6px; padding: 11px 14px;
+        border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 700; color: var(--muted);
+    }
+    .peek-bar i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+    .peek-bar i:nth-child(1) { background: #ff6b6b; }
+    .peek-bar i:nth-child(2) { background: #ffd166; }
+    .peek-bar i:nth-child(3) { background: #4cd9a0; }
+    .peek-bar span { margin-left: 6px; }
+    .peek-body { padding: 16px 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+    .bubble { max-width: 84%; padding: 10px 13px; border-radius: 16px; font-size: 13px; line-height: 1.55; }
+    .bubble.you { align-self: flex-end; background: linear-gradient(110deg, #8058ef, #bd4dd5); color: #fff; border-bottom-right-radius: 5px; }
+    .bubble.bot { align-self: flex-start; background: #f3effd; color: var(--text); border-bottom-left-radius: 5px; }
+    .peek-body .bubble:nth-child(1) { animation: popIn .5s ease-out .2s backwards; }
+    .peek-body .bubble:nth-child(2) { animation: popIn .5s ease-out 1.1s backwards; }
+    .peek-body .bubble:nth-child(3) { animation: popIn .5s ease-out 2.0s backwards; }
+    .peek-body .bubble:nth-child(4) { animation: popIn .5s ease-out 2.9s backwards; }
+
+    /* Stats, features, steps, closing */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 34px; }
+    .stat {
+        background: var(--surface-soft); border: 1px solid var(--border); border-radius: 18px;
+        padding: 14px 12px; text-align: center; backdrop-filter: blur(10px);
+    }
+    .stat b {
+        display: block; font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 600; line-height: 1.15;
+        background: linear-gradient(100deg, #ea580c, #a63fd9); -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .stat span { display: block; font-size: 11.5px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+    .home-section { margin-top: 54px; text-align: center; }
+    .home-section .section-copy { max-width: 560px; margin: 0 auto 18px; }
+    .feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; text-align: left; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; text-align: left; }
+    .feat, .step {
+        background: var(--surface); border: 1px solid var(--border); border-radius: 19px;
+        padding: 17px 16px 16px; box-shadow: 0 9px 28px var(--shadow); backdrop-filter: blur(12px);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .feat:hover, .step:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(129, 91, 225, .16); }
+    .step-num {
+        font-family: 'Playfair Display', serif; font-style: italic; font-size: 36px; line-height: 1; margin-bottom: 8px;
+        background: linear-gradient(100deg, #ea580c, #a63fd9); -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .closing { margin: 58px auto 14px; max-width: 640px; text-align: center; }
+    .closing h2 {
+        font-family: 'Playfair Display', serif; font-weight: 500; letter-spacing: -1px;
+        font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 0 0 8px; color: var(--text);
+    }
+    .closing p { color: var(--muted); font-size: 14.5px; margin: 0 0 18px; }
+
     /* ---------- Footer ---------- */
     .disclaimer {
         text-align: center; color: var(--muted); font-size: 10.5px; line-height: 1.6;
@@ -375,6 +486,23 @@ st.markdown(
         [data-testid="stChatInput"] textarea { font-size: 16px !important; padding-top: 10px !important; padding-bottom: 8px !important; }
         [data-testid="stChatInputSubmitButton"] { width: 38px !important; height: 38px !important; min-width: 38px !important; }
         [data-testid="stChatMessage"] { padding: 12px 14px !important; border-radius: 16px !important; }
+    }
+    @media (max-width: 700px) {
+        .rotator { font-size: 12.5px; padding: .5rem .9rem; gap: .4rem; }
+        .rot-window { width: 14.5em; }
+        div[data-testid="stHorizontalBlock"]:has(.cta-marker) { gap: .55rem !important; }
+        div[data-testid="stHorizontalBlock"]:has(.cta-marker) button { min-height: 44px !important; padding: .35rem 1rem !important; font-size: 13px !important; }
+        .peek { margin-top: 22px; border-radius: 18px; }
+        .bubble { font-size: 12.5px; max-width: 90%; }
+        .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 26px; }
+        .stat b { font-size: 26px; }
+        .home-section { margin-top: 40px; }
+        .feat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .steps { grid-template-columns: 1fr; gap: 10px; }
+        .feat { padding: 14px 12px; border-radius: 17px; }
+        .step { padding: 14px 16px; border-radius: 17px; }
+        .step-num { font-size: 30px; }
+        .closing { margin-top: 42px; }
     }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -458,13 +586,24 @@ def show_developer():
 
 
 # ------------------------- Header -------------------------
-header_left, header_right = st.columns([4, 1.6], vertical_alignment="center")
+on_home = st.session_state.page == "home"
+if on_home:
+    header_left, header_right = st.columns([4, 1.6], vertical_alignment="center")
+    home_slot = None
+else:
+    header_left, home_slot, header_right = st.columns([3.1, 1.15, 1.7], vertical_alignment="center")
+
 with header_left:
     st.markdown(
         '<div class="brand"><span class="brand-icon">✦</span>'
         'StartupMate<span style="color:#956de8">AI</span></div>',
         unsafe_allow_html=True,
     )
+if home_slot is not None:
+    with home_slot:
+        if st.button("🏠 Home", key="home_btn"):
+            st.session_state.page = "home"
+            st.rerun()
 with header_right:
     if st.button("👨‍💻 Developer", key="developer_btn"):
         show_developer()
@@ -519,120 +658,225 @@ def queue_prompt(prompt: str):
     st.session_state.pending_prompt = prompt
 
 
-# ------------------------- Landing / chat -------------------------
-is_landing = len(st.session_state.messages) == 1
+SURPRISE_PROMPTS = [
+    "Surprise me! Pitch one genuinely creative startup idea that solves an everyday annoyance. Give it a catchy name and tagline, then honestly critique it.",
+    "I'm feeling bold. Invent a quirky but viable startup idea for university students, then outline the problem, target users, and a tiny MVP I could build this weekend.",
+    "Roll the dice: give me three very different startup ideas (one boring-but-profitable, one weird-but-promising, one ambitious), then tell me which one you would back and why.",
+    "Pretend we are co-founders at our very first brainstorm. Pitch me an unexpected startup idea, then ask me three sharp questions to test it.",
+]
 
-if is_landing:
+
+def open_app(prompt=None):
+    st.session_state.page = "app"
+    if prompt:
+        queue_prompt(prompt)
+    st.rerun()
+
+
+def cta_row(prefix: str, start_label: str):
+    left, right = st.columns(2)
+    with left:
+        st.markdown('<div class="cta-marker"></div>', unsafe_allow_html=True)
+        start_clicked = st.button(start_label, key=f"{prefix}_start", type="primary")
+    with right:
+        surprise_clicked = st.button("🎲 Surprise me", key=f"{prefix}_surprise")
+    if start_clicked:
+        open_app()
+    if surprise_clicked:
+        open_app(random.choice(SURPRISE_PROMPTS))
+
+
+def render_home():
     st.markdown(
         """
-        <section class="hero">
-          <div class="eyebrow"><span class="live-dot"></span> YOUR AI CO-FOUNDER · IDEA TO MVP</div>
-          <h1>Let's build your <em>big idea.</em></h1>
-          <div class="hero-sub">
-            Brainstorm, validate and plan your next move with an AI co-founder
-            that works for equity-free enthusiasm.
-          </div>
-          <div class="hero-joke">You bring the idea. We'll bring the spreadsheets. Nobody has to wear a hoodie.</div>
-        </section>
-        """,
+<section class="hero">
+<div class="eyebrow"><span class="live-dot"></span> POSITION FILLED · AI CO-FOUNDER</div>
+<h1>Hey there, <em>future founder.</em></h1>
+<div class="hero-sub">I'm <b>StartupMate AI</b>, the co-founder who works for free, never steals your Wi-Fi, and has never once said "let's circle back."</div>
+<div class="rotator"><span class="rot-label">Ask me to</span><span class="rot-window"><span class="rot-list"><span>brainstorm at 3 a.m.</span><span>roast your business plan</span><span>survive your 47th pivot</span><span>draft a 30-day roadmap</span><span>brainstorm at 3 a.m.</span></span></span></div>
+</section>
+""",
+        unsafe_allow_html=True,
+    )
+
+    cta_row("top", "🚀 Start building")
+    st.markdown(
+        '<div class="fineprint">No sign-up. No credit card. No awkward small talk.</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown(
-        '<div class="workspace-note">✦ <b>Start anywhere:</b> pitch a rough idea, describe a problem, '
-        'or pick one of the tools below. “I have no idea yet” is also a valid starting point.</div>',
+        """
+<div class="peek">
+<div class="peek-bar"><i></i><i></i><i></i><span>StartupMate AI · online (and caffeinated)</span></div>
+<div class="peek-body">
+<div class="bubble you">I want to start a business but I have zero ideas. Help?</div>
+<div class="bubble bot">Perfect, a blank canvas! 🎨 Let's start with problems that annoy <i>you</i>. What did you complain about this week?</div>
+<div class="bubble you">...My landlord's Wi-Fi.</div>
+<div class="bubble bot">Great. Pain is the seed of every startup. ☕ Now, who else is suffering? Let's find your first 10 customers.</div>
+</div>
+</div>
+<div class="stats">
+<div class="stat"><b>0%</b><span>equity requested</span></div>
+<div class="stat"><b>24/7</b><span>online, no snack breaks</span></div>
+<div class="stat"><b>∞</b><span>patience for pivots</span></div>
+<div class="stat"><b>0</b><span>hoodies required</span></div>
+</div>
+<div class="home-section">
+<div class="section-label">WHAT I'M GOOD AT</div>
+<div class="section-title">Four superpowers. Zero capes.</div>
+<div class="section-copy">Pick one, or just start typing. I don't judge. (I mildly judge. Constructively.)</div>
+<div class="feat-grid">
+<div class="feat"><div class="tool-icon">💡</div><div class="tool-title">Idea Brainstormer</div><div class="tool-copy">Turns "I have a vague feeling" into an actual concept.</div></div>
+<div class="feat"><div class="tool-icon">🔎</div><div class="tool-title">SWOT Validator</div><div class="tool-copy">Honest feedback, kindly delivered. Supportive, not delusional.</div></div>
+<div class="feat"><div class="tool-icon">🗺️</div><div class="tool-title">30-Day Roadmap</div><div class="tool-copy">Because "someday" is not a deadline.</div></div>
+<div class="feat"><div class="tool-icon">📊</div><div class="tool-title">Pitch Deck Builder</div><div class="tool-copy">Ten slides. Zero clip art. (Okay, maybe one.)</div></div>
+</div>
+</div>
+<div class="home-section">
+<div class="section-label">HOW IT WORKS</div>
+<div class="section-title">Three steps. One mild existential crisis.</div>
+<div class="section-copy">Okay, we're kidding about the crisis.</div>
+<div class="steps">
+<div class="step"><div class="step-num">1</div><div class="tool-title">Tell me your idea</div><div class="tool-copy">Or admit you don't have one. That's a perfectly good starting point.</div></div>
+<div class="step"><div class="step-num">2</div><div class="tool-title">I poke holes (lovingly)</div><div class="tool-copy">SWOT, sharp questions, and a gentle reality check. Free of charge.</div></div>
+<div class="step"><div class="step-num">3</div><div class="tool-title">You leave with a plan</div><div class="tool-copy">An actual roadmap. Not just vibes and a new logo.</div></div>
+</div>
+</div>
+<div class="closing">
+<h2>Ready when you are.</h2>
+<p>The spreadsheets are already warming up.</p>
+</div>
+""",
         unsafe_allow_html=True,
     )
 
-    cols = st.columns(4, gap="small")
-    for col, action in zip(cols, QUICK_ACTIONS):
-        with col:
-            st.markdown(
-                f"""
-                <div class="tool-card">
-                  <div class="tool-icon">{action["icon"]}</div>
-                  <div class="tool-title">{action["title"]}</div>
-                  <div class="tool-copy">{action["copy"]}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if st.button(action["button"], key=f'quick_{action["key"]}', use_container_width=True):
-                queue_prompt(action["prompt"])
+    cta_row("bottom", "🚀 Let's go")
+    st.markdown(
+        '<div class="fineprint">By clicking start you agree to dream big and double-check the numbers.<br>'
+        "I'm an AI, not your lawyer, accountant, or fortune teller.</div>",
+        unsafe_allow_html=True,
+    )
 
-    user_input = st.chat_input("Pitch your idea or ask anything…")
-    if user_input:
-        queue_prompt(user_input)
 
+# ------------------------- Router -------------------------
+if st.session_state.page == "home":
+    render_home()
 else:
-    head_left, head_right = st.columns([4, 1.4], vertical_alignment="center")
-    with head_left:
+    # ------------------------- Landing / chat -------------------------
+    is_landing = len(st.session_state.messages) == 1
+
+    if is_landing:
         st.markdown(
-            '<div class="ws-head">'
-            '<div class="section-label">YOUR STARTUP WORKSPACE</div>'
-            '<div class="section-title">The idea is in motion.</div>'
-            '<div class="section-copy">Keep refining, questioning and building.</div>'
-            '</div>',
+            """
+            <section class="hero">
+              <div class="eyebrow"><span class="live-dot"></span> YOUR AI CO-FOUNDER · IDEA TO MVP</div>
+              <h1>Let's build your <em>big idea.</em></h1>
+              <div class="hero-sub">
+                Brainstorm, validate and plan your next move with an AI co-founder
+                that works for equity-free enthusiasm.
+              </div>
+              <div class="hero-joke">You bring the idea. We'll bring the spreadsheets. Nobody has to wear a hoodie.</div>
+            </section>
+            """,
             unsafe_allow_html=True,
         )
-    with head_right:
-        if st.button("↺ New chat", key="new_chat"):
-            st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-            st.session_state.pending_prompt = None
-            st.rerun()
 
-    for msg in st.session_state.messages:
-        if msg["role"] != "system":
-            avatar = "🧑‍💻" if msg["role"] == "user" else "🚀"
-            with st.chat_message(msg["role"], avatar=avatar):
-                st.markdown(msg["content"])
+        st.markdown(
+            '<div class="workspace-note">✦ <b>Start anywhere:</b> pitch a rough idea, describe a problem, '
+            'or pick one of the tools below. “I have no idea yet” is also a valid starting point.</div>',
+            unsafe_allow_html=True,
+        )
 
-    user_input = st.chat_input("Ask your co-founder anything…")
-    if user_input:
-        queue_prompt(user_input)
+        cols = st.columns(4, gap="small")
+        for col, action in zip(cols, QUICK_ACTIONS):
+            with col:
+                st.markdown(
+                    f"""
+                    <div class="tool-card">
+                      <div class="tool-icon">{action["icon"]}</div>
+                      <div class="tool-title">{action["title"]}</div>
+                      <div class="tool-copy">{action["copy"]}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if st.button(action["button"], key=f'quick_{action["key"]}', use_container_width=True):
+                    queue_prompt(action["prompt"])
 
-# ------------------------- Generate response -------------------------
-prompt = st.session_state.pending_prompt
-if prompt:
-    st.session_state.pending_prompt = None
-    st.session_state.messages.append({"role": "user", "content": prompt})
+        user_input = st.chat_input("Pitch your idea or ask anything…")
+        if user_input:
+            queue_prompt(user_input)
 
-    with st.chat_message("user", avatar="🧑‍💻"):
-        st.markdown(prompt)
-
-    succeeded = False
-    with st.chat_message("assistant", avatar="🚀"):
-        if client is None:
-            st.error(
-                "Groq is not configured. Add GROQ_API_KEY to your Streamlit secrets "
-                "before using AI generation."
+    else:
+        head_left, head_right = st.columns([4, 1.4], vertical_alignment="center")
+        with head_left:
+            st.markdown(
+                '<div class="ws-head">'
+                '<div class="section-label">YOUR STARTUP WORKSPACE</div>'
+                '<div class="section-title">The idea is in motion.</div>'
+                '<div class="section-copy">Keep refining, questioning and building.</div>'
+                '</div>',
+                unsafe_allow_html=True,
             )
-            st.session_state.messages.pop()
-        else:
-            try:
-                stream = client.chat.completions.create(
-                    model=MODEL,
-                    messages=st.session_state.messages,
-                    stream=True,
-                )
-                reply = st.write_stream(
-                    chunk.choices[0].delta.content or "" for chunk in stream
-                )
-                if reply:
-                    st.session_state.messages.append(
-                        {"role": "assistant", "content": reply}
-                    )
-                    succeeded = True
-                else:
-                    st.warning("The model returned an empty response. Please try again.")
-                    st.session_state.messages.pop()
-            except Exception as exc:
-                st.session_state.messages.pop()
-                st.error(f"AI request failed: {exc}")
+        with head_right:
+            if st.button("↺ New chat", key="new_chat"):
+                st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+                st.session_state.pending_prompt = None
+                st.rerun()
 
-    # Only rerun on success, so error messages stay visible instead of vanishing.
-    if succeeded:
-        st.rerun()
+        for msg in st.session_state.messages:
+            if msg["role"] != "system":
+                avatar = "🧑‍💻" if msg["role"] == "user" else "🚀"
+                with st.chat_message(msg["role"], avatar=avatar):
+                    st.markdown(msg["content"])
+
+        user_input = st.chat_input("Ask your co-founder anything…")
+        if user_input:
+            queue_prompt(user_input)
+
+    # ------------------------- Generate response -------------------------
+    prompt = st.session_state.pending_prompt
+    if prompt:
+        st.session_state.pending_prompt = None
+        st.session_state.messages.append({"role": "user", "content": prompt})
+
+        with st.chat_message("user", avatar="🧑‍💻"):
+            st.markdown(prompt)
+
+        succeeded = False
+        with st.chat_message("assistant", avatar="🚀"):
+            if client is None:
+                st.error(
+                    "Groq is not configured. Add GROQ_API_KEY to your Streamlit secrets "
+                    "before using AI generation."
+                )
+                st.session_state.messages.pop()
+            else:
+                try:
+                    stream = client.chat.completions.create(
+                        model=MODEL,
+                        messages=st.session_state.messages,
+                        stream=True,
+                    )
+                    reply = st.write_stream(
+                        chunk.choices[0].delta.content or "" for chunk in stream
+                    )
+                    if reply:
+                        st.session_state.messages.append(
+                            {"role": "assistant", "content": reply}
+                        )
+                        succeeded = True
+                    else:
+                        st.warning("The model returned an empty response. Please try again.")
+                        st.session_state.messages.pop()
+                except Exception as exc:
+                    st.session_state.messages.pop()
+                    st.error(f"AI request failed: {exc}")
+
+        # Only rerun on success, so error messages stay visible instead of vanishing.
+        if succeeded:
+            st.rerun()
 
 # ------------------------- Footer -------------------------
 st.markdown(
