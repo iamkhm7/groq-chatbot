@@ -194,22 +194,86 @@ st.markdown(
         background:linear-gradient(110deg,#8058ef,#bd4dd5) !important;
         color:white !important; border:0 !important;
     }}
+    /* Floating chat composer: one minimal pill, no white footer slab */
+    [data-testid="stBottom"],
+    [data-testid="stBottom"] > div,
+    [data-testid="stBottomBlockContainer"],
+    .stChatFloatingInputContainer {{
+        background:transparent !important;
+        background-color:transparent !important;
+        border:0 !important;
+        box-shadow:none !important;
+    }}
+    [data-testid="stBottom"] {{
+        padding:14px 18px 20px !important;
+    }}
+    [data-testid="stBottomBlockContainer"] {{
+        max-width:980px !important;
+        padding:0 !important;
+    }}
     [data-testid="stChatInput"] {{
         background:var(--input) !important;
-        border:1px solid rgba(137,111,220,.28) !important;
-        border-radius:22px !important;
-        box-shadow:0 14px 38px var(--shadow) !important;
-        padding:7px 12px !important;
+        background-color:var(--input) !important;
+        border:1px solid rgba(137,111,220,.25) !important;
+        border-radius:999px !important;
+        box-shadow:0 12px 34px var(--shadow), 0 2px 8px rgba(90,65,160,.05) !important;
+        padding:5px 9px 5px 20px !important;
+        min-height:62px !important;
+        transition:border-color .2s ease, box-shadow .2s ease !important;
+    }}
+    [data-testid="stChatInput"]:focus-within {{
+        border-color:rgba(145,111,239,.72) !important;
+        box-shadow:0 14px 38px var(--shadow), 0 0 0 3px rgba(145,111,239,.10) !important;
     }}
     [data-testid="stChatInput"] textarea {{
         color:var(--text) !important;
+        caret-color:#9b72ef !important;
         font-family:'DM Sans',sans-serif !important;
         font-size:14px !important;
+        line-height:1.5 !important;
+        padding-top:12px !important;
+        padding-bottom:10px !important;
     }}
-    [data-testid="stChatInput"] textarea::placeholder {{color:var(--muted)!important;}}
+    [data-testid="stChatInput"] textarea::placeholder {{
+        color:var(--muted) !important; opacity:.9 !important;
+    }}
     [data-testid="stChatInputSubmitButton"] {{
-        background:linear-gradient(135deg,#8058ef,#c34fd1)!important;
-        color:white!important;border-radius:50%!important;
+        background:linear-gradient(135deg,#8058ef,#c34fd5)!important;
+        color:white!important;border:0!important;border-radius:50%!important;
+        width:42px!important;height:42px!important;min-width:42px!important;
+        box-shadow:0 5px 14px rgba(151,83,222,.28)!important;
+        transition:transform .2s ease, box-shadow .2s ease!important;
+    }}
+    [data-testid="stChatInputSubmitButton"]:hover {{
+        transform:translateY(-1px) scale(1.04);
+        box-shadow:0 7px 18px rgba(151,83,222,.38)!important;
+    }}
+
+    /* Streamlit's native dialog must follow the selected theme */
+    [data-testid="stDialog"] > div,
+    [data-testid="stModal"] > div,
+    div[role="dialog"] {{
+        background:var(--surface) !important;
+        color:var(--text) !important;
+        border:1px solid var(--border) !important;
+        border-radius:22px !important;
+        box-shadow:0 24px 80px rgba(0,0,0,.24) !important;
+    }}
+    [data-testid="stDialog"] *,
+    [data-testid="stModal"] *,
+    div[role="dialog"] * {{
+        color:var(--text);
+    }}
+    [data-testid="stDialog"] a,
+    [data-testid="stModal"] a,
+    div[role="dialog"] a {{
+        color:#a58af2 !important;
+        font-weight:700 !important;
+    }}
+    [data-testid="stDialog"] button,
+    [data-testid="stModal"] button,
+    div[role="dialog"] button {{
+        color:var(--text) !important;
     }}
     [data-testid="stChatMessage"] {{
         background:var(--surface)!important;
@@ -267,13 +331,13 @@ with header_right:
         st.markdown(
             """
             <div style="text-align:center;line-height:1.9">
-              <div style="font-size:25px;font-weight:800">Kamrul Hasan Maruf</div>
-              <div style="color:#9876e8;font-weight:600">AI Student · StartupMate AI</div>
+              <div style="font-size:25px;font-weight:800;color:var(--text)">Kamrul Hasan Maruf</div>
+              <div style="color:#a58af2;font-weight:700">AI Student · StartupMate AI</div>
               <p>Department of Artificial Intelligence<br>
               Kyungdong University Global · South Korea</p>
               <p><b>Built with:</b> Streamlit + Groq AI</p>
-              <p style="font-size:12px">Making startup planning less intimidating—and slightly less boring.</p>
-              <a href="https://github.com/iamkhm7" target="_blank">GitHub profile ↗</a>
+              <p style="font-size:12px;color:var(--muted)">Making startup planning less intimidating—and slightly less boring.</p>
+              <a style="color:#a58af2" href="https://github.com/iamkhm7" target="_blank">GitHub profile ↗</a>
             </div>
             """,
             unsafe_allow_html=True,
@@ -449,4 +513,3 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
