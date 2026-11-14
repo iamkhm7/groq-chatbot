@@ -44,11 +44,11 @@ st.markdown(
 
     :root {
         color-scheme: light;
-        --bg: #faf8ff;
+        --bg: #f6f4fb;
         --surface: rgba(255, 255, 255, .86);
         --surface-soft: rgba(255, 255, 255, .70);
         --text: #19172b;
-        --muted: #6f6d86;
+        --muted: #5f5d78;
         --border: rgba(111, 91, 166, .16);
         --input: #ffffff;
         --shadow: rgba(76, 55, 132, .10);
@@ -61,17 +61,25 @@ st.markdown(
         font-family: 'DM Sans', sans-serif !important;
     }
 
-    /* ---------- Background: soft violet / peach / pink / sky mesh + dot grid ---------- */
+    /* ---------- Background: glowing orange > pink > violet "sunrise" on a soft lavender base ---------- */
     .stApp {
         background-color: var(--bg) !important;
         background-image:
-            radial-gradient(60% 50% at 8% 6%,   rgba(167, 139, 250, .40), transparent 70%),
-            radial-gradient(55% 45% at 94% 10%, rgba(253, 186, 140, .36), transparent 70%),
-            radial-gradient(60% 50% at 82% 96%, rgba(244, 114, 182, .26), transparent 70%),
-            radial-gradient(60% 55% at 8% 92%,  rgba(125, 211, 252, .32), transparent 70%),
-            radial-gradient(rgba(34, 24, 70, .05) 1px, transparent 1px) !important;
-        background-size: 130% 130%, 130% 130%, 130% 130%, 130% 130%, 26px 26px !important;
-        background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0 !important;
+            /* fine grain, like the reference designs */
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.09'/></svg>"),
+            /* the sunrise glow: orange core, then coral, pink, violet */
+            radial-gradient(122% 80% at 50% -22%,
+                rgba(255, 140, 40, .96) 0%,
+                rgba(255, 106, 80, .74) 24%,
+                rgba(240, 80, 150, .50) 44%,
+                rgba(156, 98, 240, .27) 62%,
+                transparent 80%),
+            /* soft violet and peach washes at the sides, cool lavender-blue at the bottom */
+            radial-gradient(46% 38% at 0% 34%, rgba(150, 100, 240, .26), transparent 72%),
+            radial-gradient(46% 38% at 100% 38%, rgba(255, 150, 175, .26), transparent 72%),
+            radial-gradient(70% 40% at 50% 108%, rgba(130, 145, 255, .30), transparent 72%) !important;
+        background-size: 220px 220px, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+        background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
         color: var(--text) !important;
         font-family: 'DM Sans', sans-serif !important;
     }
@@ -82,14 +90,6 @@ st.markdown(
     }
     [data-testid="stHeader"], #MainMenu, footer { visibility: hidden; }
     [data-testid="stToolbar"], [data-testid="stDecoration"] { display: none; }
-
-    @keyframes drift {
-        0%   { background-position: 0% 0%,   100% 0%,   100% 100%, 0% 100%,  0 0; }
-        100% { background-position: 14% 10%, 86% 8%,    88% 92%,   10% 90%,  0 0; }
-    }
-    @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-        .stApp { animation: drift 26s ease-in-out infinite alternate; }
-    }
 
     .block-container {
         max-width: 1120px !important;
@@ -156,7 +156,7 @@ st.markdown(
         text-wrap: balance;
     }
     .hero h1 em {
-        font-weight: 500; background: linear-gradient(100deg, #ff8b55, #a16be8);
+        font-weight: 500; background: linear-gradient(100deg, #ea580c, #a63fd9);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; padding-right: 4px;
     }
