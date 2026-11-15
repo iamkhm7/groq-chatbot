@@ -49,7 +49,7 @@ st.markdown(
 
     :root {
         color-scheme: light;
-        --bg: #f6f4fb;
+        --bg: #f7faf2;
         --surface: rgba(255, 255, 255, .86);
         --surface-soft: rgba(255, 255, 255, .70);
         --text: #19172b;
@@ -70,19 +70,24 @@ st.markdown(
     .stApp {
         background-color: var(--bg) !important;
         background-image:
-            /* fine grain, like the reference designs */
+            /* fine grain */
             url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.09'/></svg>"),
-            /* the sunrise glow: orange core, then coral, pink, violet */
-            radial-gradient(122% 80% at 50% -22%,
-                rgba(255, 140, 40, .96) 0%,
-                rgba(255, 106, 80, .74) 24%,
-                rgba(240, 80, 150, .50) 44%,
-                rgba(156, 98, 240, .27) 62%,
-                transparent 80%),
-            /* soft violet and peach washes at the sides, cool lavender-blue at the bottom */
-            radial-gradient(46% 38% at 0% 34%, rgba(150, 100, 240, .26), transparent 72%),
-            radial-gradient(46% 38% at 100% 38%, rgba(255, 150, 175, .26), transparent 72%),
-            radial-gradient(70% 40% at 50% 108%, rgba(130, 145, 255, .30), transparent 72%) !important;
+            /* orange glow at the top, warming to amber */
+            radial-gradient(130% 80% at 50% -22%,
+                rgba(255, 118, 8, 1) 0%,
+                rgba(255, 146, 38, .86) 28%,
+                rgba(255, 186, 84, .56) 48%,
+                rgba(255, 224, 132, .26) 64%,
+                transparent 82%),
+            /* green glow rising from the bottom */
+            radial-gradient(125% 78% at 50% 122%,
+                rgba(8, 170, 112, .78) 0%,
+                rgba(40, 200, 140, .58) 30%,
+                rgba(120, 232, 168, .34) 54%,
+                transparent 82%),
+            /* soft lime on the right, emerald on the left, so the blend stays fresh instead of muddy */
+            radial-gradient(46% 40% at 100% 52%, rgba(190, 242, 100, .30), transparent 72%),
+            radial-gradient(46% 40% at 0% 66%, rgba(74, 222, 128, .28), transparent 72%) !important;
         background-size: 220px 220px, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
         background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat !important;
         color: var(--text) !important;
@@ -194,9 +199,8 @@ st.markdown(
         background: var(--surface); border: 1px solid var(--border);
         border-radius: 19px; padding: 17px 16px 13px;
         min-height: 135px; box-shadow: 0 9px 28px var(--shadow);
-        margin-bottom: 0; backdrop-filter: blur(12px);
+        margin-bottom: 10px; backdrop-filter: blur(12px);
     }
-    div[data-testid="stHorizontalBlock"]:has(.tool-card) [data-testid="stVerticalBlock"] { gap: .5rem !important; }
     .tool-icon {
         width: 37px; height: 37px; border-radius: 12px;
         display: flex; align-items: center; justify-content: center;
@@ -225,7 +229,6 @@ st.markdown(
     div.stButton > button p { font-size: inherit !important; margin: 0 !important; }
 
     /* ---------- Floating chat composer: one minimal pill ---------- */
-    [data-testid="stBottom"],
     [data-testid="stBottom"] > div,
     [data-testid="stBottomBlockContainer"],
     .stChatFloatingInputContainer {
@@ -234,7 +237,12 @@ st.markdown(
         border: 0 !important;
         box-shadow: none !important;
     }
-    [data-testid="stBottom"] { padding: 14px 18px 20px !important; }
+    /* gentle mint fade so page content doesn't show through behind the chat box and notice */
+    [data-testid="stBottom"] {
+        background: linear-gradient(to top, rgba(226, 246, 234, .96) 0%, rgba(226, 246, 234, .86) 62%, rgba(226, 246, 234, 0) 100%) !important;
+        border: 0 !important; box-shadow: none !important;
+    }
+    [data-testid="stBottom"] { padding: 14px 18px 30px !important; }
     [data-testid="stBottomBlockContainer"] { max-width: 880px !important; padding: 0 !important; }
 
     [data-testid="stChatInput"] {
@@ -324,9 +332,9 @@ st.markdown(
     [data-testid="stDialog"] button,
     [data-testid="stModal"] button,
     div[role="dialog"] button { color: var(--text) !important; }
-    [data-testid="stDialog"] a.dev-link,
-    [data-testid="stModal"] a.dev-link,
-    div[role="dialog"] a.dev-link { color: #ffffff !important; }
+    [data-testid="stDialog"] a.dv-link,
+    [data-testid="stModal"] a.dv-link,
+    div[role="dialog"] a.dv-link { color: #ffffff !important; }
 
     /* ---------- Homepage ---------- */
     .rotator {
@@ -435,6 +443,13 @@ st.markdown(
     .closing p { color: var(--muted); font-size: 14.5px; margin: 0 0 18px; }
 
     /* ---------- Footer ---------- */
+    .notice-fixed {
+        position: fixed; left: 0; right: 0; bottom: 7px; z-index: 200;
+        text-align: center; font-size: 10.5px; color: var(--muted);
+        padding: 0 12px; pointer-events: none; white-space: nowrap;
+        overflow: hidden; text-overflow: ellipsis;
+    }
+    .notice-fixed .n-short { display: none; }
     .disclaimer {
         text-align: center; color: var(--muted); font-size: 10.5px; line-height: 1.6;
         border-top: 1px solid var(--border); padding-top: 15px; margin-top: 28px;
@@ -444,7 +459,9 @@ st.markdown(
         .hero { padding: 22px 10px 8px; }
         .hero h1 { font-size: clamp(36px, 5vw, 54px); margin: 14px 0 8px; }
         .hero-joke { display: none; }
-        .workspace-note { margin: 4px 0 12px; padding: 12px 16px; }
+        .workspace-note { margin: 4px 0 12px; padding: 10px 16px; }
+        .tool-card { min-height: 104px; padding: 14px 14px 10px; }
+        .tool-icon { width: 32px; height: 32px; margin-bottom: 8px; font-size: 16px; }
     }
 
     /* ---------- Phones ---------- */
@@ -479,8 +496,11 @@ st.markdown(
         div.stButton > button { min-height: 38px !important; font-size: 11.5px !important; }
 
         .section-title { font-size: 24px; }
+        .notice-fixed { bottom: calc(8px + env(safe-area-inset-bottom)); font-size: 10px; padding: 0 78px 0 12px; }
+        .notice-fixed .n-full { display: none; }
+        .notice-fixed .n-short { display: inline; }
 
-        [data-testid="stBottom"] { padding: 8px 12px calc(12px + env(safe-area-inset-bottom)) !important; }
+        [data-testid="stBottom"] { padding: 8px 12px calc(28px + env(safe-area-inset-bottom)) !important; }
         [data-testid="stChatInput"] { min-height: 54px !important; padding: 3px 7px 3px 16px !important; }
         /* 16px stops iPhones from zooming the page when the box is tapped */
         [data-testid="stChatInput"] textarea { font-size: 16px !important; padding-top: 10px !important; padding-bottom: 8px !important; }
@@ -514,71 +534,104 @@ st.markdown(
 
 
 # ------------------------- Developer dialog (requires streamlit>=1.37) -------------------------
-@st.dialog("Meet the team")
+@st.dialog("Meet the team", width="large")
 def show_developer():
     st.markdown(
         """
         <style>
-          .dev-profile { color: var(--text) !important; text-align: center; line-height: 1.65; }
-          .dev-kicker {
-            display: inline-block; margin: 2px 0 12px; padding: 5px 11px;
-            border: 1px solid rgba(153, 119, 239, .28); border-radius: 999px;
-            color: #8058ef !important; background: rgba(153, 119, 239, .10);
-            font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase;
+          div[role="dialog"] h2 { font-family: 'Playfair Display', Georgia, serif !important; font-weight: 500 !important; letter-spacing: -.5px; }
+          .dv { text-align: center; color: var(--text); }
+          .dv-banner {
+            height: 112px; border-radius: 22px; position: relative; overflow: hidden;
+            background:
+              radial-gradient(60% 130% at 12% 0%, rgba(255, 214, 120, .95) 0%, transparent 62%),
+              radial-gradient(70% 140% at 96% 100%, rgba(16, 200, 140, .95) 0%, transparent 64%),
+              linear-gradient(120deg, #ff7a18, #ffa94d 48%, #25c98b);
           }
-          .dev-name {
-            color: var(--text) !important; font-size: 23px; font-weight: 800;
-            letter-spacing: -.5px; line-height: 1.25; margin: 3px 0 5px;
+          .dv-banner::after {
+            content: ""; position: absolute; inset: 0; opacity: .5;
+            background-image: radial-gradient(rgba(255, 255, 255, .55) 1.2px, transparent 1.2px);
+            background-size: 16px 16px;
           }
-          .dev-role { color: #8058ef !important; font-size: 13px; font-weight: 700; margin-bottom: 13px; }
-          .dev-education { color: var(--muted) !important; font-size: 13px; line-height: 1.8; margin: 0 0 17px; }
-          .dev-link {
-            display: inline-flex; align-items: center; justify-content: center;
-            margin: 2px 0 20px; padding: 9px 17px; border-radius: 999px;
-            background: linear-gradient(110deg, #8058ef, #bd4dd5);
-            color: #fff !important; font-size: 12px; font-weight: 800;
-            text-decoration: none !important; box-shadow: 0 7px 18px rgba(137, 91, 230, .22);
+          .dv-avatar {
+            width: 96px; height: 96px; margin: -52px auto 0; padding: 4px; border-radius: 50%;
+            position: relative; z-index: 2;
+            background: conic-gradient(from 160deg, #ff7a18, #ffd166, #25c98b, #ff7a18);
+            box-shadow: 0 14px 30px rgba(20, 160, 110, .30);
           }
-          .dev-divider { height: 1px; width: 100%; background: var(--border); margin: 2px 0 15px; }
-          .team-heading {
-            color: var(--text) !important; text-align: left; font-size: 12px;
-            font-weight: 800; letter-spacing: .4px; margin: 0 0 10px;
+          .dv-avatar span {
+            display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
+            border-radius: 50%; background: var(--dialog-bg); color: var(--text);
+            font-family: 'Playfair Display', Georgia, serif; font-size: 34px; font-weight: 600; letter-spacing: -1px;
           }
-          .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; text-align: left; }
-          .team-member {
-            border: 1px solid var(--border); border-radius: 12px; background: var(--surface-soft);
-            color: var(--text) !important; padding: 10px 11px; font-size: 12px; font-weight: 700;
+          .dv-name { font-size: 23px; font-weight: 800; letter-spacing: -.4px; line-height: 1.25; margin: 12px 0 8px; color: var(--text) !important; }
+          .dv-role {
+            display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px; border-radius: 999px;
+            font-size: 10.5px; font-weight: 800; letter-spacing: .9px; text-transform: uppercase;
+            color: #047857 !important; background: rgba(16, 185, 129, .12); border: 1px solid rgba(16, 185, 129, .30);
           }
-          .team-member span {
-            display: block; color: var(--muted) !important; font-size: 9px; font-weight: 600;
-            letter-spacing: .7px; text-transform: uppercase; margin-bottom: 3px;
+          .dv-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0 18px; }
+          .dv-chip {
+            font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
+            background: var(--surface-soft); border: 1px solid var(--border); color: var(--text) !important;
           }
-          @media (max-width: 480px) {
-            .team-grid { grid-template-columns: 1fr; }
-            .dev-name { font-size: 20px; }
+          .dv-link {
+            display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px;
+            background: #19172b; color: #ffffff !important; font-size: 13px; font-weight: 800;
+            text-decoration: none !important; letter-spacing: .2px;
+            box-shadow: 0 10px 26px rgba(255, 122, 24, .32), 0 4px 14px rgba(20, 180, 120, .28);
+            transition: transform .2s ease, box-shadow .2s ease;
+          }
+          .dv-link span { color: #ffffff !important; transition: transform .2s ease; }
+          .dv-link:hover span { transform: translate(2px, -2px); }
+          .dv-link:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(255, 122, 24, .42), 0 6px 18px rgba(20, 180, 120, .36); }
+          .dv-crew-head { display: flex; align-items: center; justify-content: space-between; margin: 26px 2px 12px; }
+          .dv-crew-title { font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text) !important; }
+          .dv-count { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; color: #b45309 !important; background: rgba(255, 138, 31, .14); border: 1px solid rgba(255, 138, 31, .30); }
+          .dv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
+          .dv-member {
+            display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
+            background: var(--surface-soft); border: 1px solid var(--border);
+            transition: transform .2s ease, box-shadow .2s ease;
+          }
+          .dv-member:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--shadow); }
+          .dv-ava {
+            flex: none; width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            color: #ffffff !important; font-size: 14px; font-weight: 800; letter-spacing: .5px;
+          }
+          .dv-ava.a1 { background: linear-gradient(135deg, #f97316, #fb923c); }
+          .dv-ava.a2 { background: linear-gradient(135deg, #059669, #34d399); }
+          .dv-ava.a3 { background: linear-gradient(135deg, #d97706, #f59e0b); }
+          .dv-ava.a4 { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
+          .dv-mname { display: block; font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--text) !important; }
+          .dv-mrole { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted) !important; margin-top: 2px; }
+          .dv-built { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 7px; margin-top: 22px; font-size: 11px; color: var(--muted) !important; }
+          .dv-built b { font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-soft); border: 1px solid var(--border); color: var(--text) !important; }
+          @media (max-width: 560px) {
+            .dv-grid { grid-template-columns: 1fr; }
+            .dv-name { font-size: 20px; }
+            .dv-banner { height: 96px; }
           }
         </style>
-
-        <div class="dev-profile">
-          <div class="dev-kicker">StartupMate AI · Project Team</div>
-          <div class="dev-name">MARUF MD KAMRUL HASAN</div>
-          <div class="dev-role">Main Developer</div>
-          <p class="dev-education">
-            Student<br>
-            Department of Artificial Intelligence<br>
-            Kyungdong University Global
-          </p>
-          <a class="dev-link" href="https://linktr.ee/iamkhm" target="_blank" rel="noopener noreferrer">
-            More about the developer ↗
-          </a>
-
-          <div class="dev-divider"></div>
-          <div class="team-heading">OTHER PROJECT MEMBERS</div>
-          <div class="team-grid">
-            <div class="team-member"><span>Project member</span>Sirjan Batala</div>
-            <div class="team-member"><span>Project member</span>Ahmed Md Kazi Rakesh</div>
-            <div class="team-member"><span>Project member</span>Manish Dubey</div>
+        <div class="dv">
+          <div class="dv-banner"></div>
+          <div class="dv-avatar"><span>MH</span></div>
+          <div class="dv-name">MARUF MD KAMRUL HASAN</div>
+          <div class="dv-role">✦ Main Developer</div>
+          <div class="dv-chips">
+            <span class="dv-chip">🎓 Student</span>
+            <span class="dv-chip">🧠 Dept. of Artificial Intelligence</span>
+            <span class="dv-chip">🏫 Kyungdong University Global</span>
           </div>
+          <a class="dv-link" href="https://linktr.ee/iamkhm" target="_blank" rel="noopener noreferrer">More about the developer <span>↗</span></a>
+          <div class="dv-crew-head"><span class="dv-crew-title">The crew</span><span class="dv-count">4 project members</span></div>
+          <div class="dv-grid">
+            <div class="dv-member"><span class="dv-ava a1">SB</span><span><span class="dv-mname">Sirjan Batala</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a2">AR</span><span><span class="dv-mname">Ahmed Md Kazi Rakesh</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a3">MD</span><span><span class="dv-mname">Manish Dubey</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a4">BS</span><span><span class="dv-mname">Binod Silwal</span><span class="dv-mrole">Project member</span></span></div>
+          </div>
+          <div class="dv-built">Built with <b>Streamlit</b> <b>Groq AI</b> <b>Python</b></div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -879,14 +932,25 @@ else:
             st.rerun()
 
 # ------------------------- Footer -------------------------
-st.markdown(
-    """
-    <div class="disclaimer">
-      ⚡ AI-generated content can contain mistakes. Financial, legal and tax information
-      is not professional advice. Verify important decisions with qualified professionals.
-      <br><br>
-      <span style="opacity:.8">StartupMate AI · Built for bold ideas and realistic to-do lists.</span>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+if st.session_state.page == "home":
+    st.markdown(
+        """
+        <div class="disclaimer">
+          ⚡ AI-generated content can contain mistakes. Financial, legal and tax information
+          is not professional advice. Verify important decisions with qualified professionals.
+          <br><br>
+          <span style="opacity:.8">StartupMate AI · Built for bold ideas and realistic to-do lists.</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+else:
+    st.markdown(
+        """
+        <div class="notice-fixed">
+          <span class="n-full">⚡ AI-generated content can contain mistakes. Not professional financial, legal or tax advice. Verify important decisions.</span>
+          <span class="n-short">⚡ AI-generated, may contain mistakes. Verify before use.</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
