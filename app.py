@@ -323,6 +323,10 @@ st.markdown(
         border-radius: 22px !important;
         box-shadow: 0 24px 80px rgba(60, 40, 120, .28) !important;
     }
+    div[role="dialog"] {
+        width: clamp(min(94vw, 520px), 50vw, 700px) !important;
+        max-width: 94vw !important;
+    }
     [data-testid="stDialog"] *,
     [data-testid="stModal"] *,
     div[role="dialog"] * { color: var(--text); }
@@ -534,49 +538,36 @@ st.markdown(
 
 
 # ------------------------- Developer dialog (requires streamlit>=1.37) -------------------------
-@st.dialog("Meet the team", width="large")
+@st.dialog("Meet the team")
 def show_developer():
     st.markdown(
         """
         <style>
           div[role="dialog"] h2 { font-family: 'Playfair Display', Georgia, serif !important; font-weight: 500 !important; letter-spacing: -.5px; }
           .dv { text-align: center; color: var(--text); }
-          .dv-banner {
-            height: 112px; border-radius: 22px; position: relative; overflow: hidden;
-            background:
-              radial-gradient(60% 130% at 12% 0%, rgba(255, 214, 120, .95) 0%, transparent 62%),
-              radial-gradient(70% 140% at 96% 100%, rgba(16, 200, 140, .95) 0%, transparent 64%),
-              linear-gradient(120deg, #ff7a18, #ffa94d 48%, #25c98b);
-          }
-          .dv-banner::after {
-            content: ""; position: absolute; inset: 0; opacity: .5;
-            background-image: radial-gradient(rgba(255, 255, 255, .55) 1.2px, transparent 1.2px);
-            background-size: 16px 16px;
-          }
           .dv-avatar {
-            width: 96px; height: 96px; margin: -52px auto 0; padding: 4px; border-radius: 50%;
-            position: relative; z-index: 2;
+            width: 88px; height: 88px; margin: 2px auto 0; padding: 4px; border-radius: 50%;
             background: conic-gradient(from 160deg, #ff7a18, #ffd166, #25c98b, #ff7a18);
-            box-shadow: 0 14px 30px rgba(20, 160, 110, .30);
+            box-shadow: 0 14px 30px rgba(20, 160, 110, .28);
           }
           .dv-avatar span {
             display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
-            border-radius: 50%; background: var(--dialog-bg); color: var(--text);
-            font-family: 'Playfair Display', Georgia, serif; font-size: 34px; font-weight: 600; letter-spacing: -1px;
+            border-radius: 50%; background: var(--dialog-bg);
           }
-          .dv-name { font-size: 23px; font-weight: 800; letter-spacing: -.4px; line-height: 1.25; margin: 12px 0 8px; color: var(--text) !important; }
+          .dv-avatar svg { width: 46px; height: 46px; }
+          .dv-name { font-size: 22px; font-weight: 800; letter-spacing: -.4px; line-height: 1.25; margin: 12px 0 8px; color: var(--text) !important; }
           .dv-role {
             display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px; border-radius: 999px;
             font-size: 10.5px; font-weight: 800; letter-spacing: .9px; text-transform: uppercase;
             color: #047857 !important; background: rgba(16, 185, 129, .12); border: 1px solid rgba(16, 185, 129, .30);
           }
-          .dv-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 16px 0 18px; }
+          .dv-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px 0 16px; }
           .dv-chip {
-            font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px;
+            font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
             background: var(--surface-soft); border: 1px solid var(--border); color: var(--text) !important;
           }
           .dv-link {
-            display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px;
+            display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px;
             background: #19172b; color: #ffffff !important; font-size: 13px; font-weight: 800;
             text-decoration: none !important; letter-spacing: .2px;
             box-shadow: 0 10px 26px rgba(255, 122, 24, .32), 0 4px 14px rgba(20, 180, 120, .28);
@@ -585,37 +576,44 @@ def show_developer():
           .dv-link span { color: #ffffff !important; transition: transform .2s ease; }
           .dv-link:hover span { transform: translate(2px, -2px); }
           .dv-link:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(255, 122, 24, .42), 0 6px 18px rgba(20, 180, 120, .36); }
-          .dv-crew-head { display: flex; align-items: center; justify-content: space-between; margin: 26px 2px 12px; }
-          .dv-crew-title { font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text) !important; }
+          .dv-label { font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text) !important; }
+          .dv-crew-head { display: flex; align-items: center; justify-content: space-between; margin: 22px 2px 10px; }
           .dv-count { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; color: #b45309 !important; background: rgba(255, 138, 31, .14); border: 1px solid rgba(255, 138, 31, .30); }
-          .dv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
+          .dv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; text-align: left; }
           .dv-member {
-            display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
+            display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px;
             background: var(--surface-soft); border: 1px solid var(--border);
             transition: transform .2s ease, box-shadow .2s ease;
           }
           .dv-member:hover { transform: translateY(-2px); box-shadow: 0 10px 24px var(--shadow); }
-          .dv-ava {
-            flex: none; width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            color: #ffffff !important; font-size: 14px; font-weight: 800; letter-spacing: .5px;
-          }
+          .dv-ava { flex: none; width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+          .dv-ava svg { width: 22px; height: 22px; fill: #ffffff; }
           .dv-ava.a1 { background: linear-gradient(135deg, #f97316, #fb923c); }
           .dv-ava.a2 { background: linear-gradient(135deg, #059669, #34d399); }
           .dv-ava.a3 { background: linear-gradient(135deg, #d97706, #f59e0b); }
           .dv-ava.a4 { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
           .dv-mname { display: block; font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--text) !important; }
           .dv-mrole { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--muted) !important; margin-top: 2px; }
-          .dv-built { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 7px; margin-top: 22px; font-size: 11px; color: var(--muted) !important; }
-          .dv-built b { font-weight: 700; padding: 4px 10px; border-radius: 999px; background: var(--surface-soft); border: 1px solid var(--border); color: var(--text) !important; }
+          .dv-built { margin-top: 20px; }
+          .dv-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+          .dv-tool {
+            display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700;
+            padding: 6px 13px; border-radius: 999px; background: var(--surface-soft);
+            border: 1px solid var(--border); color: var(--text) !important;
+          }
+          .dv-tool i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+          .dv-about {
+            margin-top: 20px; text-align: left; padding: 14px 16px; border-radius: 16px;
+            background: var(--surface-soft); border: 1px solid var(--border); border-left: 4px solid #25c98b;
+          }
+          .dv-about p { margin: 6px 0 0; font-size: 12.5px; line-height: 1.65; color: var(--muted) !important; }
           @media (max-width: 560px) {
             .dv-grid { grid-template-columns: 1fr; }
             .dv-name { font-size: 20px; }
-            .dv-banner { height: 96px; }
           }
         </style>
         <div class="dv">
-          <div class="dv-banner"></div>
-          <div class="dv-avatar"><span>MH</span></div>
+          <div class="dv-avatar"><span><svg viewBox="0 0 24 24"><defs><linearGradient id="dvg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a18"/><stop offset="1" stop-color="#25c98b"/></linearGradient></defs><path fill="url(#dvg)" d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span></div>
           <div class="dv-name">MARUF MD KAMRUL HASAN</div>
           <div class="dv-role">✦ Main Developer</div>
           <div class="dv-chips">
@@ -624,14 +622,26 @@ def show_developer():
             <span class="dv-chip">🏫 Kyungdong University Global</span>
           </div>
           <a class="dv-link" href="https://linktr.ee/iamkhm" target="_blank" rel="noopener noreferrer">More about the developer <span>↗</span></a>
-          <div class="dv-crew-head"><span class="dv-crew-title">The crew</span><span class="dv-count">4 project members</span></div>
+          <div class="dv-crew-head"><span class="dv-label">The crew</span><span class="dv-count">4 project members</span></div>
           <div class="dv-grid">
-            <div class="dv-member"><span class="dv-ava a1">SB</span><span><span class="dv-mname">Sirjan Batala</span><span class="dv-mrole">Project member</span></span></div>
-            <div class="dv-member"><span class="dv-ava a2">AR</span><span><span class="dv-mname">Ahmed Md Kazi Rakesh</span><span class="dv-mrole">Project member</span></span></div>
-            <div class="dv-member"><span class="dv-ava a3">MD</span><span><span class="dv-mname">Manish Dubey</span><span class="dv-mrole">Project member</span></span></div>
-            <div class="dv-member"><span class="dv-ava a4">BS</span><span><span class="dv-mname">Binod Silwal</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a1"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Sirjan Batala</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a2"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Ahmed Md Kazi Rakesh</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a3"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Manish Dubey</span><span class="dv-mrole">Project member</span></span></div>
+            <div class="dv-member"><span class="dv-ava a4"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Binod Silwal</span><span class="dv-mrole">Project member</span></span></div>
           </div>
-          <div class="dv-built">Built with <b>Streamlit</b> <b>Groq AI</b> <b>Python</b></div>
+          <div class="dv-built">
+            <div class="dv-label">Built with</div>
+            <div class="dv-tools">
+              <span class="dv-tool"><i style="background:linear-gradient(135deg,#4285f4,#9b72f3)"></i>Gemini</span>
+              <span class="dv-tool"><i style="background:#d97757"></i>Claude</span>
+              <span class="dv-tool"><i style="background:#19172b"></i>GitHub</span>
+              <span class="dv-tool"><i style="background:#ff4b4b"></i>Streamlit</span>
+            </div>
+          </div>
+          <div class="dv-about">
+            <div class="dv-label">About</div>
+            <p>This website and its chatbot were put together by a group of university students as a team project. Because of that, we don't recommend relying on it for real-life or professional purposes.</p>
+          </div>
         </div>
         """,
         unsafe_allow_html=True,
