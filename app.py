@@ -13,7 +13,7 @@ from groq import Groq
 
 st.set_page_config(
     page_title="StartupMate AI — Your AI Co-Founder",
-    page_icon="✦",
+    page_icon="🚀",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
@@ -113,16 +113,17 @@ st.markdown(
 
 :root {
     color-scheme: light;
-    --bg: #f5f5f2;
+    --bg: #f4efe8;
     --surface: #ffffff;
-    --surface-glass: rgba(255, 255, 255, 0.72);
-    --ink: #111111;
-    --muted: #62625d;
-    --accent: #d9412c;
-    --border: rgba(17, 17, 17, 0.08);
-    --border-strong: rgba(17, 17, 17, 0.14);
-    --shadow-card: 0 22px 46px -18px rgba(17, 17, 17, 0.12), 0 0 0 1px rgba(17, 17, 17, 0.045);
-    --shadow-soft: 0 10px 26px -12px rgba(17, 17, 17, 0.10);
+    --surface-glass: rgba(255, 255, 255, 0.80);
+    --ink: #141418;
+    --muted: #5d5b66;
+    --accent: #e04832;
+    --accent-2: #5b5bd6;
+    --border: rgba(20, 20, 24, 0.08);
+    --border-strong: rgba(20, 20, 24, 0.14);
+    --shadow-card: 0 22px 46px -18px rgba(34, 28, 56, 0.14), 0 0 0 1px rgba(20, 20, 24, 0.045);
+    --shadow-soft: 0 10px 26px -12px rgba(34, 28, 56, 0.12);
 }
 
 html, body {
@@ -131,15 +132,22 @@ html, body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* ---------- Ambient Alabaster Canvas + Concentric Studio Rings ---------- */
+/* ---------- Warm Studio Canvas + Soft Color Washes + Concentric Rings ---------- */
 .stApp {
     background-color: var(--bg) !important;
     background-image:
-        radial-gradient(circle at 50% 34%, transparent 15%, rgba(17, 17, 17, 0.032) 15.08%, transparent 15.25%),
-        radial-gradient(circle at 50% 34%, transparent 28%, rgba(17, 17, 17, 0.028) 28.08%, transparent 28.25%),
-        radial-gradient(circle at 50% 34%, transparent 43%, rgba(17, 17, 17, 0.024) 43.08%, transparent 43.25%),
-        radial-gradient(circle at 50% 34%, transparent 60%, rgba(17, 17, 17, 0.018) 60.08%, transparent 60.25%),
-        radial-gradient(60% 50% at 50% 30%, rgba(255, 255, 255, 0.75) 0%, rgba(245, 245, 242, 0) 75%) !important;
+        radial-gradient(circle at 50% 34%, transparent 15%, rgba(20, 20, 24, 0.042) 15.08%, transparent 15.25%),
+        radial-gradient(circle at 50% 34%, transparent 28%, rgba(20, 20, 24, 0.036) 28.08%, transparent 28.25%),
+        radial-gradient(circle at 50% 34%, transparent 43%, rgba(20, 20, 24, 0.03) 43.08%, transparent 43.25%),
+        radial-gradient(circle at 50% 34%, transparent 60%, rgba(20, 20, 24, 0.022) 60.08%, transparent 60.25%),
+        /* coral-apricot glow (top-left) */
+        radial-gradient(48% 42% at 8% 12%, rgba(249, 115, 72, 0.24) 0%, transparent 72%),
+        /* soft periwinkle-indigo glow (top-right) */
+        radial-gradient(46% 44% at 92% 18%, rgba(114, 118, 242, 0.20) 0%, transparent 72%),
+        /* warm amber glow (lower-left) */
+        radial-gradient(50% 42% at 16% 88%, rgba(251, 191, 36, 0.18) 0%, transparent 70%),
+        /* soft rose-coral lift (lower-right) */
+        radial-gradient(44% 38% at 88% 85%, rgba(236, 72, 118, 0.14) 0%, transparent 70%) !important;
     background-attachment: fixed !important;
     color: var(--ink) !important;
     font-family: 'Inter', sans-serif !important;
@@ -174,8 +182,8 @@ p, li, label { color: var(--ink); }
     padding: 4px 0;
 }
 .brand-dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--accent);
     display: inline-block;
@@ -190,21 +198,21 @@ p, li, label { color: var(--ink); }
     gap: 22px;
     padding: 9px 20px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(17, 17, 17, 0.06);
-    box-shadow: 0 6px 20px -10px rgba(17, 17, 17, 0.08);
+    border: 1px solid rgba(20, 20, 24, 0.07);
+    box-shadow: 0 8px 22px -12px rgba(34, 28, 56, 0.14);
     font-size: 13px;
     font-weight: 500;
     color: var(--muted);
     margin: 0 auto;
 }
 .nav-pill-strip .nav-badge {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
     border-radius: 50%;
-    background: var(--accent);
+    background: linear-gradient(135deg, #e04832, #f26b3a);
     color: #fff;
     font-size: 10px;
     font-weight: 700;
@@ -256,24 +264,24 @@ div[data-testid="stHorizontalBlock"]:has(.ws-head) > div:not(:first-child) div.s
     justify-content: flex-end;
 }
 
-/* ---------- Buttons (Minimalist White Pills + Solid Black Editorial CTA) ---------- */
+/* ---------- Buttons (Minimalist White Pills + High-Contrast CTA) ---------- */
 div.stButton > button {
     border: 1px solid var(--border-strong) !important;
     border-radius: 9999px !important;
-    background: var(--surface) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
     color: var(--ink) !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 500 !important;
     font-size: 13px !important;
     min-height: 40px !important;
     padding: 0.4rem 1.15rem !important;
-    box-shadow: 0 6px 18px -10px rgba(17, 17, 17, 0.14) !important;
+    box-shadow: 0 6px 18px -10px rgba(34, 28, 56, 0.16) !important;
     transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, background 0.2s ease !important;
 }
 div.stButton > button:hover {
-    border-color: var(--ink) !important;
+    border-color: var(--accent) !important;
     transform: translateY(-2px);
-    box-shadow: 0 10px 24px -10px rgba(17, 17, 17, 0.22) !important;
+    box-shadow: 0 10px 24px -10px rgba(224, 72, 50, 0.24) !important;
 }
 div.stButton > button p {
     font-size: inherit !important;
@@ -281,18 +289,18 @@ div.stButton > button p {
     color: inherit !important;
 }
 
-/* Primary CTA: Solid Black Pill ("Try it on with your camera" style) */
+/* Primary CTA: Solid Ink Pill */
 div.stButton > button[kind="primary"],
 div.stButton > button[data-testid="stBaseButton-primary"] {
-    background: #111111 !important;
+    background: linear-gradient(135deg, #16161d 0%, #262040 100%) !important;
     color: #ffffff !important;
-    border: 1px solid #111111 !important;
-    box-shadow: 0 12px 28px -10px rgba(17, 17, 17, 0.42) !important;
+    border: 1px solid #16161d !important;
+    box-shadow: 0 12px 28px -10px rgba(34, 24, 62, 0.44) !important;
 }
 div.stButton > button[kind="primary"]:hover,
 div.stButton > button[data-testid="stBaseButton-primary"]:hover {
-    background: #242424 !important;
-    border-color: #242424 !important;
+    background: linear-gradient(135deg, #e04832 0%, #f26b3a 100%) !important;
+    border-color: #e04832 !important;
     color: #ffffff !important;
     transform: translateY(-2px);
 }
@@ -319,9 +327,9 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
 /* Tilted Floating Lookbook / Feature Cards */
 .mood-card {
     position: relative;
-    width: 196px;
+    width: 198px;
     background: #ffffff;
-    border-radius: 22px;
+    border-radius: 24px;
     padding: 16px 16px 18px;
     box-shadow: var(--shadow-card);
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
@@ -333,20 +341,20 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
 .mood-card.tilt-br { transform: rotate(-6deg) translateX(6px); }
 .mood-card:hover {
     transform: translateY(-6px) rotate(0deg) !important;
-    box-shadow: 0 28px 54px -16px rgba(17, 17, 17, 0.16), 0 0 0 1px rgba(17, 17, 17, 0.06);
+    box-shadow: 0 28px 54px -16px rgba(34, 28, 56, 0.18), 0 0 0 1px rgba(20, 20, 24, 0.06);
     z-index: 5;
 }
 .mood-kicker {
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--muted);
     margin-bottom: 10px;
 }
 .mood-visual {
-    height: 86px;
-    border-radius: 14px;
+    height: 88px;
+    border-radius: 16px;
     background: #f7f7f4;
-    border: 1px solid rgba(17, 17, 17, 0.05);
+    border: 1px solid rgba(20, 20, 24, 0.05);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -371,7 +379,7 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: var(--accent);
+    background: linear-gradient(135deg, #e04832, #f26b3a);
     color: #ffffff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -379,7 +387,7 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 6px 14px rgba(217, 65, 44, 0.35);
+    box-shadow: 0 6px 14px rgba(224, 72, 50, 0.38);
     border: 2px solid #ffffff;
 }
 
@@ -393,14 +401,14 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
 .bezel-frame {
     position: relative;
     width: 100%;
-    border-radius: 32px;
-    border: 8px solid #141414;
+    border-radius: 34px;
+    border: 8px solid #16161d;
     background:
-        radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.14), transparent 52%),
-        radial-gradient(circle at 85% 85%, rgba(217, 65, 44, 0.22), transparent 55%),
-        linear-gradient(160deg, #272725 0%, #151514 60%, #1e1c1a 100%);
+        radial-gradient(circle at 18% 15%, rgba(114, 118, 242, 0.30), transparent 52%),
+        radial-gradient(circle at 86% 85%, rgba(224, 72, 50, 0.30), transparent 55%),
+        linear-gradient(160deg, #252336 0%, #16161d 58%, #261a1d 100%);
     padding: 14px 14px 16px;
-    box-shadow: 0 36px 70px -24px rgba(17, 17, 17, 0.38);
+    box-shadow: 0 36px 72px -24px rgba(34, 24, 62, 0.44);
     color: #ffffff;
 }
 .bezel-hud-top {
@@ -410,7 +418,7 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
     letter-spacing: 0.04em;
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.80);
     padding: 2px 4px 12px;
 }
 .rec-dot {
@@ -420,16 +428,16 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     border-radius: 50%;
     background: var(--accent);
     margin-right: 6px;
-    box-shadow: 0 0 0 3px rgba(217, 65, 44, 0.28);
+    box-shadow: 0 0 0 3px rgba(224, 72, 50, 0.30);
 }
 
 /* Translucent Frosted Glass Card Inside the Frame */
 .bezel-glass-card {
-    background: rgba(255, 255, 255, 0.84);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 22px;
     padding: 14px;
     color: var(--ink);
     box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.35);
@@ -442,28 +450,28 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     font-size: 10px;
     color: var(--muted);
     letter-spacing: 0.03em;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(17, 17, 17, 0.07);
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(20, 20, 24, 0.08);
 }
 .bubble {
     max-width: 90%;
-    padding: 8px 11px;
-    border-radius: 14px;
+    padding: 8px 13px;
+    border-radius: 18px;
     font-size: 12px;
     line-height: 1.48;
 }
 .bubble.you {
     align-self: flex-end;
-    background: #111111;
+    background: linear-gradient(135deg, #e04832 0%, #f26b3a 100%);
     color: #ffffff;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 5px;
 }
 .bubble.bot {
     align-self: flex-start;
-    background: rgba(245, 245, 242, 0.95);
-    border: 1px solid rgba(17, 17, 17, 0.07);
+    background: rgba(244, 239, 232, 0.92);
+    border: 1px solid rgba(91, 91, 214, 0.14);
     color: var(--ink);
-    border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 5px;
 }
 .bezel-glass-card .bubble:nth-child(2) { animation: popIn .45s ease-out .15s backwards; }
 .bezel-glass-card .bubble:nth-child(3) { animation: popIn .45s ease-out .9s backwards; }
@@ -478,16 +486,16 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
 }
 .hud-pill-dark {
     flex: 1;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.11);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 14px;
-    padding: 7px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 16px;
+    padding: 7px 12px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
     line-height: 1.35;
-    color: rgba(255, 255, 255, 0.72);
+    color: rgba(255, 255, 255, 0.74);
 }
 .hud-pill-dark b {
     display: block;
@@ -501,13 +509,13 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     align-items: center;
     gap: 7px;
     background: #ffffff;
-    border: 1px solid rgba(17, 17, 17, 0.07);
+    border: 1px solid rgba(20, 20, 24, 0.08);
     border-radius: 999px;
-    padding: 6px 13px;
+    padding: 6px 14px;
     font-size: 11.5px;
     font-weight: 500;
     color: var(--ink);
-    box-shadow: 0 12px 24px -10px rgba(17, 17, 17, 0.18);
+    box-shadow: 0 12px 24px -10px rgba(34, 28, 56, 0.20);
     white-space: nowrap;
 }
 .step-float-pill .s-dot {
@@ -546,7 +554,11 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
 }
 .editorial-h1 em {
     font-style: italic;
-    color: var(--ink);
+    background: linear-gradient(100deg, #e04832 0%, #5b5bd6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-right: 4px;
 }
 .editorial-right {
     display: flex;
@@ -568,10 +580,10 @@ div.stButton > button[data-testid="stBaseButton-primary"]:hover {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.45rem 0.95rem;
+    padding: 0.45rem 1rem;
     border-radius: 999px;
-    background: #ffffff;
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(224, 72, 50, 0.18);
     box-shadow: var(--shadow-soft);
     font-size: 12.5px;
     font-weight: 500;
@@ -642,10 +654,6 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
 .fineprint.centered { text-align: center; }
 
 /* ---------- Below-the-Fold Editorial Sections ---------- */
-.section-divider {
-    border-top: 1px solid var(--border);
-    margin: 48px 0 36px;
-}
 .section-label {
     font-family: 'JetBrains Mono', monospace;
     color: var(--accent);
@@ -677,9 +685,10 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
     margin-top: 38px;
 }
 .stat {
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    border-radius: 20px;
+    border-radius: 22px;
     padding: 18px 16px;
     box-shadow: var(--shadow-soft);
 }
@@ -689,7 +698,10 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
     font-size: 40px;
     font-weight: 400;
     line-height: 1;
-    color: var(--ink);
+    background: linear-gradient(100deg, #e04832 0%, #5b5bd6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .stat span {
     display: block;
@@ -722,16 +734,17 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
 }
 .feat, .step {
     position: relative;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    border-radius: 22px;
+    border-radius: 24px;
     padding: 20px 18px;
     box-shadow: var(--shadow-card);
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
 }
 .feat:hover, .step:hover {
     transform: translateY(-4px);
-    box-shadow: 0 26px 48px -18px rgba(17, 17, 17, 0.16);
+    box-shadow: 0 26px 48px -18px rgba(34, 28, 56, 0.18);
 }
 .card-index {
     font-family: 'JetBrains Mono', monospace;
@@ -750,12 +763,22 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
     border-radius: 50%;
     background: var(--accent);
 }
+.feat:nth-child(2) .card-index { color: #5b5bd6; }
+.feat:nth-child(2) .card-index::before { background: #5b5bd6; }
+.feat:nth-child(3) .card-index { color: #0f8a5f; }
+.feat:nth-child(3) .card-index::before { background: #0f8a5f; }
+.feat:nth-child(4) .card-index { color: #c77c0c; }
+.feat:nth-child(4) .card-index::before { background: #c77c0c; }
+
 .step-num {
     font-family: 'Instrument Serif', Georgia, serif;
     font-style: italic;
     font-size: 42px;
     line-height: 0.95;
-    color: var(--ink);
+    background: linear-gradient(100deg, #e04832 0%, #5b5bd6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
 .tool-title {
@@ -808,16 +831,23 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
     color: var(--ink);
     margin: 10px 0 0;
 }
-.app-hero h1 em { font-style: italic; }
+.app-hero h1 em {
+    font-style: italic;
+    background: linear-gradient(100deg, #e04832 0%, #5b5bd6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-right: 4px;
+}
 
 .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 12px;
+    padding: 6px 13px;
     border-radius: 999px;
-    background: #ffffff;
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(224, 72, 50, 0.18);
     font-family: 'JetBrains Mono', monospace;
     font-size: 10.5px;
     font-weight: 500;
@@ -834,10 +864,10 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
 }
 
 .workspace-note {
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(91, 91, 214, 0.14);
+    border-radius: 22px;
     padding: 16px 18px;
     color: var(--muted);
     font-size: 12.5px;
@@ -849,9 +879,10 @@ div[data-testid="stHorizontalBlock"]:has(.cta-center) {
 /* Tilted Spatial Tool Cards on App Landing */
 .tool-card {
     position: relative;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--border);
-    border-radius: 22px;
+    border-radius: 24px;
     padding: 18px 16px 16px;
     min-height: 152px;
     box-shadow: var(--shadow-card);
@@ -864,7 +895,7 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(3) .tool-ca
 div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(4) .tool-card { transform: rotate(2.1deg); }
 div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     transform: translateY(-5px) rotate(0deg) !important;
-    box-shadow: 0 26px 50px -16px rgba(17, 17, 17, 0.16);
+    box-shadow: 0 26px 50px -16px rgba(34, 28, 56, 0.18);
 }
 .tool-badge {
     position: absolute;
@@ -873,7 +904,7 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: var(--accent);
+    background: linear-gradient(135deg, #e04832, #f26b3a);
     color: #ffffff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -883,9 +914,9 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     justify-content: center;
 }
 .tool-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -895,24 +926,46 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     margin-bottom: 12px;
 }
 
-/* Active Chat HUD Bar */
+/* Soft editorial pastel tints across the 4 feature / quick-action cards */
+div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(1) .tool-icon,
+.mood-card.tilt-tl .mood-visual {
+    background: linear-gradient(135deg, #fff1eb, #ffe2d6);
+    border-color: rgba(224, 72, 50, 0.16);
+}
+div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(2) .tool-icon,
+.mood-card.tilt-bl .mood-visual {
+    background: linear-gradient(135deg, #eef0ff, #e0e4ff);
+    border-color: rgba(91, 91, 214, 0.16);
+}
+div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(3) .tool-icon,
+.mood-card.tilt-tr .mood-visual {
+    background: linear-gradient(135deg, #ecfdf5, #d5f7e6);
+    border-color: rgba(16, 150, 100, 0.16);
+}
+div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:nth-child(4) .tool-icon,
+.mood-card.tilt-br .mood-visual {
+    background: linear-gradient(135deg, #fef9e7, #fdecc2);
+    border-color: rgba(217, 140, 20, 0.18);
+}
+
+/* Active Chat HUD Bar (subtle indigo-to-espresso sheen) */
 .chat-hud-strip {
     max-width: 820px;
-    margin: 6px auto 16px;
+    margin: 6px auto 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #141414;
-    color: rgba(255, 255, 255, 0.85);
-    border-radius: 16px;
-    padding: 9px 16px;
+    background: linear-gradient(95deg, #16161d 0%, #262040 58%, #341d22 100%);
+    color: rgba(255, 255, 255, 0.90);
+    border-radius: 999px;
+    padding: 10px 20px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.04em;
-    box-shadow: 0 14px 30px -14px rgba(17, 17, 17, 0.35);
+    box-shadow: 0 14px 32px -14px rgba(34, 24, 62, 0.42);
 }
 
-/* ---------- Chat Composer (Minimal White Pill + Solid Black Send Button) ---------- */
+/* ---------- Chat Composer (Modern Frosted Pill + Coral-Orange Send) ---------- */
 [data-testid="stBottom"] > div,
 [data-testid="stBottomBlockContainer"],
 .stChatFloatingInputContainer {
@@ -922,7 +975,7 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     box-shadow: none !important;
 }
 [data-testid="stBottom"] {
-    background: linear-gradient(to top, rgba(245, 245, 242, 0.98) 0%, rgba(245, 245, 242, 0.88) 62%, rgba(245, 245, 242, 0) 100%) !important;
+    background: linear-gradient(to top, rgba(244, 239, 232, 0.97) 0%, rgba(244, 239, 232, 0.85) 62%, rgba(244, 239, 232, 0) 100%) !important;
     border: 0 !important;
     box-shadow: none !important;
     padding: 14px 18px 30px !important;
@@ -932,18 +985,20 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     padding: 0 !important;
 }
 [data-testid="stChatInput"] {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    border: 1.5px solid rgba(17, 17, 17, 0.14) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    background-color: rgba(255, 255, 255, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1.5px solid rgba(91, 91, 214, 0.20) !important;
     border-radius: 9999px !important;
-    box-shadow: 0 18px 40px -16px rgba(17, 17, 17, 0.18) !important;
-    padding: 5px 9px 5px 20px !important;
+    box-shadow: 0 18px 40px -16px rgba(38, 32, 64, 0.18) !important;
+    padding: 5px 9px 5px 22px !important;
     min-height: 60px !important;
     transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 [data-testid="stChatInput"]:focus-within {
-    border-color: #111111 !important;
-    box-shadow: 0 20px 44px -16px rgba(17, 17, 17, 0.24), 0 0 0 3px rgba(17, 17, 17, 0.06) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 20px 44px -16px rgba(224, 72, 50, 0.22), 0 0 0 3px rgba(224, 72, 50, 0.10) !important;
 }
 [data-testid="stChatInput"] > div,
 [data-testid="stChatInput"] > div > div,
@@ -975,47 +1030,100 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     opacity: 0.85 !important;
 }
 [data-testid="stChatInputSubmitButton"] {
-    background: #111111 !important;
+    background: linear-gradient(135deg, #e04832 0%, #f26b3a 100%) !important;
     color: #ffffff !important;
     border: 0 !important;
     border-radius: 50% !important;
     width: 42px !important;
     height: 42px !important;
     min-width: 42px !important;
-    box-shadow: 0 6px 16px -6px rgba(17, 17, 17, 0.45) !important;
-    transition: transform 0.2s ease, background 0.2s ease !important;
+    box-shadow: 0 8px 18px -6px rgba(224, 72, 50, 0.50) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
 }
 [data-testid="stChatInputSubmitButton"]:hover {
-    background: var(--accent) !important;
-    transform: translateY(-1px) scale(1.04);
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: 0 10px 22px -6px rgba(224, 72, 50, 0.62) !important;
 }
 
-/* ---------- Chat Messages (Crisp Editorial Cards) ---------- */
+/* ---------- Chat Messages: Right-Aligned User Pill + Modern Rounded AI Bubble ---------- */
+[data-testid="stElementContainer"]:has([data-testid="stChatMessage"]),
+.element-container:has([data-testid="stChatMessage"]) {
+    max-width: 820px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex !important;
+}
+[data-testid="stElementContainer"]:has([data-testid="stChatMessageAvatarUser"]),
+.element-container:has([data-testid="stChatMessageAvatarUser"]) {
+    justify-content: flex-end !important;
+}
+[data-testid="stElementContainer"]:has([data-testid="stChatMessageAvatarAssistant"]),
+.element-container:has([data-testid="stChatMessageAvatarAssistant"]) {
+    justify-content: flex-start !important;
+}
+
+/* Base pill-curved AI response bubble */
 [data-testid="stChatMessage"] {
-    background: #ffffff !important;
-    border: 1px solid rgba(17, 17, 17, 0.08) !important;
-    border-radius: 22px !important;
-    box-shadow: 0 12px 30px -18px rgba(17, 17, 17, 0.14) !important;
-    padding: 16px 20px !important;
+    width: fit-content !important;
+    max-width: min(88%, 740px) !important;
+    background: rgba(255, 255, 255, 0.86) !important;
+    backdrop-filter: blur(18px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+    border: 1px solid rgba(91, 91, 214, 0.14) !important;
+    border-radius: 28px 28px 28px 10px !important;
+    box-shadow: 0 14px 34px -18px rgba(38, 32, 64, 0.16) !important;
+    padding: 16px 22px !important;
     margin-bottom: 12px !important;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0 !important;
+    margin-right: auto !important;
     gap: 14px !important;
+    align-items: flex-start !important;
 }
+
+/* User message: compact coral-gradient pill pinned to the right */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
-    background: rgba(255, 255, 255, 0.56) !important;
-    border: 1px solid rgba(17, 17, 17, 0.09) !important;
-    box-shadow: none !important;
+    width: fit-content !important;
+    max-width: min(76%, 600px) !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    flex-direction: row-reverse !important;
+    align-items: center !important;
+    background: linear-gradient(135deg, #e04832 0%, #f26b3a 100%) !important;
+    border: none !important;
+    border-radius: 30px 30px 10px 30px !important;
+    padding: 10px 12px 10px 22px !important;
+    box-shadow: 0 14px 28px -12px rgba(224, 72, 50, 0.45) !important;
 }
-[data-testid="stChatMessageAvatarUser"],
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"],
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdown"] {
+    width: fit-content !important;
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+}
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdownContainer"],
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdownContainer"] p,
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stMarkdownContainer"] li {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* Circular modern avatar badges */
+[data-testid="stChatMessageAvatarUser"] {
+    background: rgba(255, 255, 255, 0.24) !important;
+    border: 1px solid rgba(255, 255, 255, 0.40) !important;
+    border-radius: 999px !important;
+    width: 32px !important;
+    height: 32px !important;
+}
 [data-testid="stChatMessageAvatarAssistant"] {
-    background: #f5f5f2 !important;
-    border: 1px solid rgba(17, 17, 17, 0.10) !important;
-    border-radius: 12px !important;
-    width: 34px !important;
-    height: 34px !important;
+    background: linear-gradient(135deg, #ffefe8 0%, #edeaff 100%) !important;
+    border: 1px solid rgba(224, 72, 50, 0.20) !important;
+    border-radius: 999px !important;
+    width: 36px !important;
+    height: 36px !important;
 }
+
 [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] {
     font-size: 14.5px !important;
     line-height: 1.65 !important;
@@ -1035,6 +1143,9 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
 [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li {
     color: var(--ink) !important;
     margin-bottom: 0.3em !important;
+}
+[data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] li::marker {
+    color: var(--accent) !important;
 }
 [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] h1,
 [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] h2,
@@ -1058,7 +1169,7 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     margin: 0.6em 0 !important;
 }
 [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] th {
-    background: #f5f5f2 !important;
+    background: rgba(91, 91, 214, 0.08) !important;
     font-weight: 600 !important;
     text-align: left !important;
     padding: 8px 10px !important;
@@ -1069,17 +1180,17 @@ div[data-testid="stHorizontalBlock"]:has(.tool-card) > div:hover .tool-card {
     border-bottom: 1px solid var(--border) !important;
 }
 
-/* ---------- Dialog (Alabaster Frosted Glass) ---------- */
+/* ---------- Dialog (Warm Frosted Glass) ---------- */
 [data-testid="stDialog"] > div,
 [data-testid="stModal"] > div,
 div[role="dialog"] {
-    background: rgba(248, 248, 245, 0.88) !important;
-    backdrop-filter: blur(22px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(22px) saturate(140%) !important;
+    background: rgba(250, 247, 242, 0.90) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
     color: var(--ink) !important;
-    border: 1px solid rgba(17, 17, 17, 0.10) !important;
+    border: 1px solid rgba(20, 20, 24, 0.10) !important;
     border-radius: 26px !important;
-    box-shadow: 0 32px 80px -20px rgba(17, 17, 17, 0.28) !important;
+    box-shadow: 0 32px 80px -20px rgba(34, 24, 62, 0.28) !important;
 }
 div[role="dialog"] {
     width: clamp(min(94vw, 520px), 50vw, 700px) !important;
@@ -1178,7 +1289,7 @@ div[role="dialog"] a.dv-link { color: #ffffff !important; }
 
     .stats, .feat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .steps { grid-template-columns: 1fr; gap: 10px; }
-    .chat-hud-strip { font-size: 10px; padding: 8px 12px; }
+    .chat-hud-strip { font-size: 10px; padding: 8px 14px; }
 
     .notice-fixed {
         bottom: calc(8px + env(safe-area-inset-bottom));
@@ -1206,9 +1317,15 @@ div[role="dialog"] a.dv-link { color: #ffffff !important; }
         min-width: 38px !important;
     }
     [data-testid="stChatMessage"] {
-        padding: 13px 15px !important;
-        border-radius: 16px !important;
+        padding: 13px 16px !important;
+        border-radius: 24px 24px 24px 8px !important;
+        max-width: 92% !important;
         gap: 10px !important;
+    }
+    [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
+        border-radius: 26px 26px 8px 26px !important;
+        padding: 9px 11px 9px 18px !important;
+        max-width: 86% !important;
     }
 }
 
@@ -1236,8 +1353,8 @@ div[role="dialog"] h2 {
 .dv { text-align: center; color: var(--ink); }
 .dv-avatar {
     width: 82px; height: 82px; margin: 2px auto 0; padding: 3px; border-radius: 50%;
-    background: #141414;
-    box-shadow: 0 14px 28px -10px rgba(17, 17, 17, 0.35);
+    background: linear-gradient(135deg, #e04832, #5b5bd6);
+    box-shadow: 0 14px 28px -10px rgba(91, 91, 214, 0.35);
 }
 .dv-avatar span {
     display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;
@@ -1253,24 +1370,24 @@ div[role="dialog"] h2 {
     display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px; border-radius: 999px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent) !important; background: rgba(217, 65, 44, 0.09);
-    border: 1px solid rgba(217, 65, 44, 0.22);
+    color: var(--accent) !important; background: rgba(224, 72, 50, 0.10);
+    border: 1px solid rgba(224, 72, 50, 0.24);
 }
 .dv-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px 0 16px; }
 .dv-chip {
     font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 999px;
-    background: #ffffff; border: 1px solid rgba(17, 17, 17, 0.09);
+    background: #ffffff; border: 1px solid rgba(20, 20, 24, 0.09);
     color: var(--ink) !important;
 }
 .dv-link {
     display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px;
-    background: #111111; color: #ffffff !important; font-size: 13px; font-weight: 600;
+    background: linear-gradient(135deg, #16161d 0%, #262040 100%); color: #ffffff !important; font-size: 13px; font-weight: 600;
     text-decoration: none !important;
-    box-shadow: 0 12px 26px -10px rgba(17, 17, 17, 0.45);
+    box-shadow: 0 12px 26px -10px rgba(34, 24, 62, 0.45);
     transition: transform 0.2s ease, background 0.2s ease;
 }
 .dv-link span { color: #ffffff !important; transition: transform 0.2s ease; }
-.dv-link:hover { transform: translateY(-2px); background: #262626; }
+.dv-link:hover { transform: translateY(-2px); background: linear-gradient(135deg, #e04832 0%, #f26b3a 100%); }
 .dv-link:hover span { transform: translate(2px, -2px); }
 .dv-label {
     font-family: 'JetBrains Mono', monospace;
@@ -1282,16 +1399,20 @@ div[role="dialog"] h2 {
 .dv-grid .dv-member:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .dv-member {
     display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 16px;
-    background: #ffffff; border: 1px solid rgba(17, 17, 17, 0.08);
+    background: #ffffff; border: 1px solid rgba(20, 20, 24, 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-.dv-member:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgba(17, 17, 17, 0.16); }
+.dv-member:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgba(34, 28, 56, 0.16); }
 .dv-ava {
     flex: none; width: 38px; height: 38px; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    background: #161616;
+    background: #16161d;
 }
-.dv-ava.acc { background: var(--accent); }
+.dv-ava.a1 { background: linear-gradient(135deg, #e04832, #f26b3a); }
+.dv-ava.a2 { background: linear-gradient(135deg, #5b5bd6, #7c7cf0); }
+.dv-ava.a3 { background: linear-gradient(135deg, #0f8a5f, #28b485); }
+.dv-ava.a4 { background: linear-gradient(135deg, #d97706, #f59e0b); }
+.dv-ava.a5 { background: linear-gradient(135deg, #16161d, #3b3663); }
 .dv-ava svg { width: 20px; height: 20px; fill: #ffffff; }
 .dv-mname { display: block; font-size: 13px; font-weight: 600; line-height: 1.3; color: var(--ink) !important; }
 .dv-mrole {
@@ -1304,13 +1425,13 @@ div[role="dialog"] h2 {
 .dv-tool {
     display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500;
     padding: 6px 13px; border-radius: 999px;
-    background: #ffffff; border: 1px solid rgba(17, 17, 17, 0.09);
+    background: #ffffff; border: 1px solid rgba(20, 20, 24, 0.09);
     color: var(--ink) !important;
 }
 .dv-tool i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 .dv-about {
     margin-top: 20px; text-align: left; padding: 14px 16px; border-radius: 16px;
-    background: #ffffff; border: 1px solid rgba(17, 17, 17, 0.08);
+    background: #ffffff; border: 1px solid rgba(20, 20, 24, 0.08);
     border-left: 3px solid var(--accent);
 }
 .dv-about p { margin: 6px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--muted) !important; }
@@ -1320,7 +1441,7 @@ div[role="dialog"] h2 {
 }
 </style>
 <div class="dv">
-<div class="dv-avatar"><span><svg viewBox="0 0 24 24"><path fill="#111111" d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span></div>
+<div class="dv-avatar"><span><svg viewBox="0 0 24 24"><path fill="#141418" d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span></div>
 <div class="dv-name">MARUF MD KAMRUL HASAN</div>
 <div class="dv-role">● Main Developer</div>
 <div class="dv-chips">
@@ -1331,19 +1452,19 @@ div[role="dialog"] h2 {
 <a class="dv-link" href="[https://linktr.ee/iamkhm](https://linktr.ee/iamkhm)" target="_blank" rel="noopener noreferrer">More about the developer <span>↗</span></a>
 <div class="dv-crew-head"><span class="dv-label">The crew</span></div>
 <div class="dv-grid">
-<div class="dv-member"><span class="dv-ava acc"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Sirjan Batala</span><span class="dv-mrole">Project member</span></span></div>
-<div class="dv-member"><span class="dv-ava"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Ahmed Md Kazi Rakesh</span><span class="dv-mrole">Project member</span></span></div>
-<div class="dv-member"><span class="dv-ava"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Manish Dubey</span><span class="dv-mrole">Project member</span></span></div>
-<div class="dv-member"><span class="dv-ava"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Binod Silwal</span><span class="dv-mrole">Project member</span></span></div>
-<div class="dv-member"><span class="dv-ava acc"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Sudais Mian</span><span class="dv-mrole">Project member</span></span></div>
+<div class="dv-member"><span class="dv-ava a1"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Sirjan Batala</span><span class="dv-mrole">Project member</span></span></div>
+<div class="dv-member"><span class="dv-ava a2"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Ahmed Md Kazi Rakesh</span><span class="dv-mrole">Project member</span></span></div>
+<div class="dv-member"><span class="dv-ava a3"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Manish Dubey</span><span class="dv-mrole">Project member</span></span></div>
+<div class="dv-member"><span class="dv-ava a4"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Binod Silwal</span><span class="dv-mrole">Project member</span></span></div>
+<div class="dv-member"><span class="dv-ava a5"><svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.1 0-7.5 2.2-7.5 5v1.5h15V19c0-2.8-3.4-5-7.5-5Z"/></svg></span><span><span class="dv-mname">Sudais Mian</span><span class="dv-mrole">Project member</span></span></div>
 </div>
 <div class="dv-built">
 <div class="dv-label">Built with</div>
 <div class="dv-tools">
-<span class="dv-tool"><i style="background:#111111"></i>Gemini</span>
-<span class="dv-tool"><i style="background:#d9412c"></i>Claude</span>
-<span class="dv-tool"><i style="background:#555550"></i>GitHub</span>
-<span class="dv-tool"><i style="background:#d9412c"></i>Streamlit</span>
+<span class="dv-tool"><i style="background:#5b5bd6"></i>Gemini</span>
+<span class="dv-tool"><i style="background:#e04832"></i>Claude</span>
+<span class="dv-tool"><i style="background:#16161d"></i>GitHub</span>
+<span class="dv-tool"><i style="background:#f26b3a"></i>Streamlit</span>
 </div>
 </div>
 <div class="dv-about">
