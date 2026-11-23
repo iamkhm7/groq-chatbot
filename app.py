@@ -1701,7 +1701,7 @@ f"""
 
         for msg in st.session_state.messages:
             if msg["role"] != "system":
-                avatar = "🧑‍💻" if msg["role"] == "user" else "✦"
+                avatar = "🧑‍💻" if msg["role"] == "user" else "✨"
                 with st.chat_message(msg["role"], avatar=avatar):
                     text = clean_reply(msg["content"]) if msg["role"] == "assistant" else msg["content"]
                     st.markdown(text)
@@ -1720,7 +1720,7 @@ f"""
             st.markdown(prompt)
 
         succeeded = False
-        with st.chat_message("assistant", avatar="✦"):
+        with st.chat_message("assistant", avatar="✨"):
             if client is None:
                 st.error(
                     "Groq is not configured. Add GROQ_API_KEY to your Streamlit secrets "
