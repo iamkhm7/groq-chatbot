@@ -1458,4 +1458,284 @@ def cta_row(prefix: str, start_label: str, centered: bool = False):
         st.markdown(f'<div class="{marker_cls}"></div>', unsafe_allow_html=True)
         start_clicked = st.button(start_label, key=f"{prefix}_start", type="primary")
     with right:
-        surprise_clicked
+        surprise_clicked = st.button("🎲 Surprise me", key=f"{prefix}_surprise")
+    if start_clicked:
+        open_app()
+    if surprise_clicked:
+        open_app(random.choice(SURPRISE_PROMPTS))
+
+
+def render_home():
+    hero_left, hero_right = st.columns([1.15, 1.0], gap="large", vertical_alignment="center")
+
+    with hero_left:
+        st.markdown(
+"""
+<div class="studio-hero-left">
+<div class="eyebrow"><span class="live-dot"></span>POSITION FILLED · AI CO-FOUNDER</div>
+<h1 class="studio-h1">Hey there,<br><em>future founder.</em></h1>
+<p class="studio-sub">
+I'm <b>StartupMate AI</b>—the co-founder who works for 0% equity, never steals your Wi-Fi,
+and turns rough midnight notes into SWOT checks, pitch decks, and 30-day execution plans.
+</p>
+<div class="rotator">
+<span class="rot-label">Ask me to</span>
+<span class="rot-window"><span class="rot-list"><span>brainstorm at 3 a.m.</span><span>roast your business plan</span><span>survive your 47th pivot</span><span>draft a 30-day roadmap</span><span>brainstorm at 3 a.m.</span></span></span>
+</div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+        cta_row("top", "🚀 Start building")
+        st.markdown(
+            '<div class="fineprint">No sign-up. No credit card. No awkward small talk. (Strictly startups and business only.)</div>',
+            unsafe_allow_html=True,
+        )
+
+    with hero_right:
+        st.markdown(
+"""
+<div class="blueprint-stack">
+<div class="blueprint-back"></div>
+<div class="blueprint-card">
+<div class="bp-header">
+<span class="bp-title">✦ VENTURE SESSION #01</span>
+<span class="bp-tag">LIVE CO-FOUNDER</span>
+</div>
+<div class="bp-body">
+<div class="bp-msg you">I want to start a business but I have zero ideas. Help?</div>
+<div class="bp-msg bot">Perfect, a blank canvas. What annoyed you enough to complain about this week?</div>
+<div class="bp-msg you">...My landlord's Wi-Fi.</div>
+<div class="bp-msg bot">Pain is the seed of every startup. Let's scope a weekend MVP and find your first 10 customers.</div>
+</div>
+<div class="bp-metrics">
+<div class="bp-metric m-emerald"><span>Stage</span><b>Ideation → MVP</b></div>
+<div class="bp-metric m-cobalt"><span>Roadmap</span><b>30 Days</b></div>
+<div class="bp-metric m-coral"><span>Equity Ask</span><b>0.0%</b></div>
+</div>
+</div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+"""
+<div class="stats">
+<div class="stat"><b>0%</b><span>equity requested</span></div>
+<div class="stat"><b>24/7</b><span>online · no snack breaks</span></div>
+<div class="stat"><b>∞</b><span>patience for pivots</span></div>
+<div class="stat"><b>0</b><span>hoodies required</span></div>
+</div>
+
+<div class="home-section">
+<div class="home-section-head">
+<div>
+<div class="section-label">What I'm good at</div>
+<div class="section-title">Four superpowers. Zero capes.</div>
+</div>
+<div class="section-copy">Pick a launchpad module, or just start typing. I mildly judge—constructively.</div>
+</div>
+<div class="feat-grid">
+<div class="feat"><div class="feat-tag">01 · IDEATION</div><div class="tool-title">Idea Brainstormer</div><div class="tool-copy">Turns "I have a vague feeling" into an actual concept with target users and an MVP.</div></div>
+<div class="feat"><div class="feat-tag">02 · VALIDATION</div><div class="tool-title">SWOT Validator</div><div class="tool-copy">Honest feedback, kindly delivered. Supportive, not delusional.</div></div>
+<div class="feat"><div class="feat-tag">03 · EXECUTION</div><div class="tool-title">30-Day Roadmap</div><div class="tool-copy">Weekly milestones and checkpoints, because "someday" is not a deadline.</div></div>
+<div class="feat"><div class="feat-tag">04 · STORYTELLING</div><div class="tool-title">Pitch Deck Builder</div><div class="tool-copy">Ten structured slides. Zero clip art. (Okay, maybe one.)</div></div>
+</div>
+</div>
+
+<div class="home-section">
+<div class="home-section-head">
+<div>
+<div class="section-label">How it works</div>
+<div class="section-title">Three steps. Zero fluff.</div>
+</div>
+<div class="section-copy">From rough thought to concrete next step in a single session.</div>
+</div>
+<div class="steps">
+<div class="step"><div class="step-num">01</div><div class="tool-title">Tell me your idea</div><div class="tool-copy">Or admit you don't have one. That's a perfectly good starting point.</div></div>
+<div class="step"><div class="step-num">02</div><div class="tool-title">I poke holes (lovingly)</div><div class="tool-copy">SWOT, sharp questions, and a gentle reality check. Free of charge.</div></div>
+<div class="step"><div class="step-num">03</div><div class="tool-title">You leave with a plan</div><div class="tool-copy">An actual roadmap. Not just vibes and a new logo.</div></div>
+</div>
+</div>
+
+<div class="closing">
+<h2>Ready when you are.</h2>
+<p>The spreadsheets are already warming up.</p>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    cta_row("bottom", "🚀 Let's go", centered=True)
+    st.markdown(
+        '<div class="fineprint centered">By clicking start you agree to dream big and double-check the numbers.<br>'
+        "I'm an AI, not your lawyer, accountant, or fortune teller.</div>",
+        unsafe_allow_html=True,
+    )
+
+
+# ------------------------- Router -------------------------
+if st.session_state.page == "home":
+    render_home()
+else:
+    is_landing = len(st.session_state.messages) == 1 and not st.session_state.pending_prompt
+
+    if is_landing:
+        st.markdown(
+"""
+<section class="app-hero">
+<div>
+<div class="eyebrow"><span class="live-dot"></span>YOUR AI CO-FOUNDER · IDEA TO MVP</div>
+<h1>Let's build your <em>big idea.</em></h1>
+</div>
+<div class="workspace-note">
+<b>Start anywhere:</b> pitch a rough concept, describe a nagging problem, or pick a module below.
+“I have no idea yet” is also a valid starting point.<br>
+<b>Scope:</b> startups and business only—no trivia, poems, or homework.
+</div>
+</section>
+""",
+            unsafe_allow_html=True,
+        )
+
+        st.write("")
+        cols = st.columns(4, gap="medium")
+        for col, action in zip(cols, QUICK_ACTIONS):
+            with col:
+                st.markdown(
+f"""
+<div class="tool-card {action["color"]}">
+<div class="tool-top">
+<div class="tool-icon">{action["icon"]}</div>
+<span class="tool-num">{action["num"]}</span>
+</div>
+<div class="tool-title">{action["title"]}</div>
+<div class="tool-copy">{action["copy"]}</div>
+</div>
+""",
+                    unsafe_allow_html=True,
+                )
+                if st.button(action["button"], key=f'quick_{action["key"]}', use_container_width=True):
+                    queue_prompt(action["prompt"])
+
+        user_input = st.chat_input("Ask about startups or business…")
+        if user_input:
+            queue_prompt(user_input)
+
+    else:
+        head_left, head_right = st.columns([4, 1.4], vertical_alignment="center")
+        with head_left:
+            st.markdown(
+                '<div class="ws-head">'
+                '<div class="section-label">Your startup workspace</div>'
+                '<div class="section-title">The idea is in motion.</div>'
+                '<div class="section-copy">Keep refining, questioning, and building.</div>'
+                '</div>',
+                unsafe_allow_html=True,
+            )
+        with head_right:
+            if st.button("↺ New chat", key="new_chat"):
+                st.session_state.messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+                st.session_state.pending_prompt = None
+                st.rerun()
+
+        # Centered chat lane so HUD bar, right-aligned user pills, and left-aligned AI replies align cleanly
+        _, chat_col, _ = st.columns([0.65, 6.7, 0.65])
+        with chat_col:
+            st.markdown(
+                '<div class="chat-hud-strip">'
+                '<span><span class="chat-hud-dot"></span>LIVE · STARTUPMATE CO-FOUNDER</span>'
+                '<span>status: ready · scope: business</span>'
+                '</div>',
+                unsafe_allow_html=True,
+            )
+
+            for msg in st.session_state.messages:
+                if msg["role"] == "user":
+                    render_user_bubble(msg["content"])
+                elif msg["role"] == "assistant":
+                    with st.chat_message("assistant", avatar="✨"):
+                        st.markdown(clean_reply(msg["content"]))
+
+            # ------------------------- Generate response -------------------------
+            prompt = st.session_state.pending_prompt
+            if prompt:
+                st.session_state.pending_prompt = None
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                render_user_bubble(prompt)
+
+                succeeded = False
+                with st.chat_message("assistant", avatar="✨"):
+                    if client is None:
+                        st.error(
+                            "Groq is not configured. Add GROQ_API_KEY to your Streamlit secrets "
+                            "before using AI generation."
+                        )
+                        st.session_state.messages.pop()
+                    else:
+                        try:
+                            api_messages = list(st.session_state.messages)
+                            api_messages[-1] = {
+                                **api_messages[-1],
+                                "content": api_messages[-1]["content"] + SCOPE_REMINDER,
+                            }
+                            stream = client.chat.completions.create(
+                                model=MODEL,
+                                messages=api_messages,
+                                stream=True,
+                            )
+                            placeholder = st.empty()
+                            full_text = ""
+                            for chunk in stream:
+                                if not chunk.choices:
+                                    continue
+                                delta = chunk.choices[0].delta.content or ""
+                                if not delta:
+                                    continue
+                                full_text += delta
+                                placeholder.markdown(clean_reply(full_text, streaming=True) + " ▌")
+                            reply = clean_reply(full_text).strip()
+                            placeholder.markdown(reply)
+                            if reply:
+                                st.session_state.messages.append(
+                                    {"role": "assistant", "content": reply}
+                                )
+                                succeeded = True
+                            else:
+                                st.warning("The model returned an empty response. Please try again.")
+                                st.session_state.messages.pop()
+                        except Exception as exc:
+                            st.session_state.messages.pop()
+                            st.error(f"AI request failed: {exc}")
+
+                if succeeded:
+                    st.rerun()
+
+        user_input = st.chat_input("Ask about startups or business…")
+        if user_input:
+            queue_prompt(user_input)
+
+# ------------------------- Footer -------------------------
+if st.session_state.page == "home":
+    st.markdown(
+"""
+<div class="disclaimer">
+⚡ AI-generated content can contain mistakes. Financial, legal and tax information
+is not professional advice. Verify important decisions with qualified professionals.
+<br><br>
+<span style="opacity:.8">StartupMate AI · Built for bold ideas and realistic to-do lists.</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+else:
+    st.markdown(
+"""
+<div class="notice-fixed">
+<span class="n-full">⚡ AI-generated content can contain mistakes. Not professional financial, legal or tax advice. Verify important decisions.</span>
+<span class="n-short">⚡ AI-generated, may contain mistakes. Verify before use.</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
